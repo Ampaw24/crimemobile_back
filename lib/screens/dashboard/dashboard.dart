@@ -5,10 +5,40 @@ import 'package:crimeappbackend/core/text.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../module/dashboardcardmodule.dart';
+import '../../widget/dashboardcards.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+List<DashboardCard> cardcontent = [
+  DashboardCard(
+      title: "Reports",
+      cardIcon: FontAwesomeIcons.fileText,
+      cardColor: AppColors.dashboardGreen),
+  DashboardCard(
+      title: "Manage\nNews",
+      cardIcon: FontAwesomeIcons.fileText,
+      cardColor: AppColors.dashboardYellow),
+  DashboardCard(
+      title: "Manage\nTips",
+      cardIcon: FontAwesomeIcons.fileText,
+      cardColor: AppColors.dashboardRed),
+  DashboardCard(
+      title: "Users",
+      cardIcon: FontAwesomeIcons.fileText,
+      cardColor: AppColors.dashboardBrown),
+  DashboardCard(
+      title: "Feeds",
+      cardIcon: FontAwesomeIcons.fileText,
+      cardColor: AppColors.btnBlue)
+];
+
+class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,18 +80,35 @@ class Dashboard extends StatelessWidget {
           preferredSize: const Size.fromHeight(60)),
       body: Column(
         children: [
-          Stack(
-            children: [
-              Container(
-                margin: const EdgeInsets.only(left: 10),
-                child: Text(
-                  " Dashboard",
-                  style: GoogleFonts.montserrat(
-                    textStyle: headerbold1,
-                  ),
-                ),
+          Container(
+        
+            child: Text(
+              " Dashboard",
+              style: GoogleFonts.montserrat(
+                textStyle: headerbold1,
               ),
-            ],
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, // Number of columns in the grid
+                mainAxisSpacing: 10.0, // Spacing between rows
+                crossAxisSpacing: 10.0, // Spacing between columns
+              ),
+              itemCount:
+                  cardcontent.length, // Total number of items in the grid
+              itemBuilder: (BuildContext context, int index) {
+                return GridTile(
+                    child: DashboarddCards(
+                  cardColor: cardcontent[index].cardColor,
+                  cardIcon: cardcontent[index].cardIcon,
+                  counter: cardcontent[index].counter,
+                  title: cardcontent[index].title,
+                ));
+              },
+            ),
           ),
         ],
       ),

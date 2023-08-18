@@ -6,5 +6,5 @@ class AppColors {
   static const dashboardGreen = Color(0xff036418);
   static const dashboardRed = Color(0xffD32811);
   static const dashboardBrown = Color(0xff371B17);
-  
+  static const dashboardYellow = Color(0xffDEA81D);
 }
