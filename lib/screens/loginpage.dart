@@ -2,8 +2,12 @@
 
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
+import 'package:crimeappbackend/screens/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../widget/appbtn.dart';
+import 'forgotpassword.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -121,7 +125,12 @@ class _LoginPageState extends State<LoginPage> {
                           Container(
                             margin: const EdgeInsets.only(left: 170, top: 10),
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FogotPassword()));
+                              },
                               child: Text(
                                 "Forgot Password..",
                                 style: GoogleFonts.roboto(
@@ -134,21 +143,14 @@ class _LoginPageState extends State<LoginPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          Container(
-                            width: 350,
-                            height: 55,
-                            child: Center(
-                              child: Text(
-                                "Login",
-                                style: GoogleFonts.montserrat(
-                                  textStyle: logintxtwhite,
-                                ),
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: AppColors.btnBlue,
-                            ),
+                          CustomBtn(
+                            btnClick: (){
+                                Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Dashboard()));
+                            },
+                            btnText: "Login",
                           )
                         ],
                       ),
