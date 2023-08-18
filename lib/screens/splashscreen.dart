@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:async';
-
 import 'package:crimeappbackend/core/text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'loginpage.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -24,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<Timer> splashLoad() async {
     return Timer(
-        Duration(seconds: 6),
+        Duration(seconds: 10),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage())));
   }
