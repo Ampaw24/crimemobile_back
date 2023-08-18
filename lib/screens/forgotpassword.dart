@@ -125,24 +125,12 @@ class _FogotPasswordState extends State<FogotPassword> {
                                   vertical: 15, horizontal: 15),
                               border: OutlineInputBorder()),
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(left: 170, top: 10),
-                          child: GestureDetector(
-                            child: Text(
-                              "Forgot Password..",
-                              style: GoogleFonts.roboto(
-                                  color: AppColors.btnBlue,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w300),
-                            ),
-                          ),
-                        ),
                         SizedBox(
                           height: 10,
                         ),
                         CustomBtn(
                           btnClick: () {
-                          
+                            Navigator.pop(context);
                           },
                           btnText: "Reset",
                         )

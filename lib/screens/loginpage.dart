@@ -2,7 +2,7 @@
 
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
-import 'package:crimeappbackend/screens/dashboard.dart';
+import 'package:crimeappbackend/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -144,11 +144,11 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           CustomBtn(
-                            btnClick: (){
-                                Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Dashboard()));
+                            btnClick: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Dashboard()));
                             },
                             btnText: "Login",
                           )
