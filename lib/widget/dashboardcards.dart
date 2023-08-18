@@ -46,7 +46,7 @@ class DashboarddCards extends StatelessWidget {
               child: Container(
                 height: 40,
                 width: 38,
-                child: Icon(cardIcon),
+                child: Icon(cardIcon,color:Colors.white,),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white.withOpacity(0.45),

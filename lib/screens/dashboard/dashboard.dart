@@ -22,19 +22,23 @@ List<DashboardCard> cardcontent = [
       cardColor: AppColors.dashboardGreen),
   DashboardCard(
       title: "Manage\nNews",
-      cardIcon: FontAwesomeIcons.fileText,
+      cardIcon: FontAwesomeIcons.solidNewspaper,
       cardColor: AppColors.dashboardYellow),
   DashboardCard(
       title: "Manage\nTips",
-      cardIcon: FontAwesomeIcons.fileText,
+      cardIcon: FontAwesomeIcons.lightbulb,
       cardColor: AppColors.dashboardRed),
   DashboardCard(
       title: "Users",
-      cardIcon: FontAwesomeIcons.fileText,
+      cardIcon: FontAwesomeIcons.users,
       cardColor: AppColors.dashboardBrown),
   DashboardCard(
       title: "Feeds",
-      cardIcon: FontAwesomeIcons.fileText,
+      cardIcon: FontAwesomeIcons.videoCamera,
+      cardColor: AppColors.btnBlue),
+        DashboardCard(
+      title: "Profile",
+      cardIcon: FontAwesomeIcons.user,
       cardColor: AppColors.btnBlue)
 ];
 
@@ -81,7 +85,6 @@ class _DashboardState extends State<Dashboard> {
       body: Column(
         children: [
           Container(
-        
             child: Text(
               " Dashboard",
               style: GoogleFonts.montserrat(
