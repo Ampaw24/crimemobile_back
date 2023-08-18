@@ -36,7 +36,7 @@ List<DashboardCard> cardcontent = [
       title: "Feeds",
       cardIcon: FontAwesomeIcons.videoCamera,
       cardColor: AppColors.btnBlue),
-        DashboardCard(
+  DashboardCard(
       title: "Profile",
       cardIcon: FontAwesomeIcons.user,
       cardColor: AppColors.btnBlue)
@@ -83,10 +83,12 @@ class _DashboardState extends State<Dashboard> {
           ),
           preferredSize: const Size.fromHeight(60)),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
+            margin: const EdgeInsets.only(left: 15),
             child: Text(
-              " Dashboard",
+              "Dashboard",
               style: GoogleFonts.montserrat(
                 textStyle: headerbold1,
               ),
