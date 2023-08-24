@@ -12,5 +12,13 @@ const headerbold1 =
     TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.w500);
 const dashboardCardTitle = TextStyle(
     color: Color(0xfff9fcff), fontWeight: FontWeight.bold, fontSize: 20);
-    const dashboardCardcount = TextStyle(
+const dashboardCardcount = TextStyle(
     color: Color(0xfff9fcff), fontWeight: FontWeight.w700, fontSize: 22);
+const headerboldblue1 = TextStyle(
+    color: Color.fromARGB(211, 14, 14, 33),
+    fontSize: 22,
+    fontWeight: FontWeight.w500);
+const headerboldblue2 = TextStyle(
+    color: Color.fromARGB(211, 14, 14, 33),
+    fontSize: 15,
+    fontWeight: FontWeight.w500);

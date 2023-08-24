@@ -2,11 +2,17 @@
 
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
+import 'package:crimeappbackend/screens/manage_news/managenews.dart';
+import 'package:crimeappbackend/screens/users/manageusers.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../module/dashboardcardmodule.dart';
 import '../../widget/dashboardcards.dart';
+import '../feeds/feeds.dart';
+import '../profile/profilepage.dart';
+import '../report/reportpage.dart';
+import '../tips/managetips.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -17,29 +23,35 @@ class Dashboard extends StatefulWidget {
 
 List<DashboardCard> cardcontent = [
   DashboardCard(
+      navigate: ReportPage(),
       title: "Reports",
       cardIcon: FontAwesomeIcons.fileText,
       cardColor: AppColors.dashboardGreen),
   DashboardCard(
+      navigate: ManageNews(),
       title: "Manage\nNews",
       cardIcon: FontAwesomeIcons.solidNewspaper,
       cardColor: AppColors.dashboardYellow),
   DashboardCard(
+      navigate: ManageTips(),
       title: "Manage\nTips",
       cardIcon: FontAwesomeIcons.lightbulb,
       cardColor: AppColors.dashboardRed),
   DashboardCard(
+      navigate: ManageUsers(),
       title: "Users",
       cardIcon: FontAwesomeIcons.users,
       cardColor: AppColors.dashboardBrown),
   DashboardCard(
+      navigate: FeedsPage(),
       title: "Feeds",
       cardIcon: FontAwesomeIcons.videoCamera,
       cardColor: AppColors.btnBlue),
   DashboardCard(
+      navigate: ProfilePage(),
       title: "Profile",
       cardIcon: FontAwesomeIcons.user,
-      cardColor: AppColors.btnBlue)
+      cardColor: Colors.blue)
 ];
 
 class _DashboardState extends State<Dashboard> {
@@ -107,6 +119,7 @@ class _DashboardState extends State<Dashboard> {
               itemBuilder: (BuildContext context, int index) {
                 return GridTile(
                     child: DashboarddCards(
+                  navigatePage: cardcontent[index].navigate,
                   cardColor: cardcontent[index].cardColor,
                   cardIcon: cardcontent[index].cardIcon,
                   counter: cardcontent[index].counter,

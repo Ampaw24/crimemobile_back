@@ -1,11 +1,9 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
-
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
 import 'package:crimeappbackend/screens/dashboard/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../widget/appbtn.dart';
 import 'forgotpassword.dart';
 
@@ -80,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: 15, fontWeight: FontWeight.w300),
                           ),
                           TextFormField(
+                          
                             cursorColor: AppColors.btnBlue,
                             decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
@@ -126,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                             margin: const EdgeInsets.only(left: 170, top: 10),
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(
+                                Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => FogotPassword()));
