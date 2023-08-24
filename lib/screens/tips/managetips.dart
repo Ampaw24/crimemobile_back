@@ -20,7 +20,13 @@ class _ManageTipsState extends State<ManageTips> {
   List<TipsModule> tips = [
     TipsModule(
         title: "Ensure Growth",
-        discription: "Proper lorem textures on jbasvchysugf")
+        discription: "Proper lorem textures on jbasvchysugf"),
+    TipsModule(
+        title: "Ensure Growth",
+        discription: "Proper lorem textures on jbasvchysugf"),
+    TipsModule(
+        title: "Ensure Growth",
+        discription: "Proper lorem textures on jbasvchysugf"),
   ];
   @override
   Widget build(BuildContext context) {
@@ -73,8 +79,18 @@ class _ManageTipsState extends State<ManageTips> {
                         vertical: 25, horizontal: 20),
                     leading: Container(
                       height: 100,
-                      width: 100,
+                      width: 70,
+                      child: Center(
+                        child: Text(
+                          (index + 1).toString(),
+                          style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 27,
+                              color: Colors.white),
+                        ),
+                      ),
                       decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
                         color: AppColors.dashboardYellow,
                       ),
                     ),
