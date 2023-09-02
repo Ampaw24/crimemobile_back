@@ -2,6 +2,7 @@
 
 import 'package:crimeappbackend/core/text.dart';
 import 'package:crimeappbackend/module/reportsmodule.dart';
+import 'package:crimeappbackend/screens/report/viewreport.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -95,11 +96,20 @@ class _ReportPageState extends State<ReportPage> {
                         child: ListTile(
                           trailing: GestureDetector(
                             child: Icon(
-                              FontAwesomeIcons.dotCircle,
+                              Icons.delete,
                               color: AppColors.btnBlue,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ViewReport(
+                                      crimelocation: reports[index].location,
+                                      medicalassistance: reports[index].medicalAssistance,
+                                      username: reports[index].user_name,
+                                    )));
+                          },
                           leading: Material(
                             borderRadius: BorderRadius.circular(25),
                             elevation: 5,
@@ -170,11 +180,10 @@ class _ReportPageState extends State<ReportPage> {
                                           child: Text('Delete'),
                                           onPressed: () {
                                             // Remove the item from the list
-                                          
 
                                             // Update the UI by rebuilding the widget
                                             setState(() {
-                                                reports.removeAt(index);
+                                              reports.removeAt(index);
                                             });
 
                                             // Close the dialog

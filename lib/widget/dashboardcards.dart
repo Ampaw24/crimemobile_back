@@ -17,7 +17,7 @@ class DashboarddCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>navigatePage)),
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context)=>navigatePage)), 
       child: Container(
         margin: const EdgeInsets.only(top: 10, left: 5),
         width: 150,

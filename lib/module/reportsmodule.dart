@@ -6,6 +6,7 @@ class ReportModule {
   bool medicalAssistance;
   ReportModule(
       {
+      
       required this.user_name,  
       required this.crime_discription,
       required this.location,
