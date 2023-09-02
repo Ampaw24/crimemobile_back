@@ -21,17 +21,19 @@ class _ReportPageState extends State<ReportPage> {
   Widget build(BuildContext context) {
     List<ReportModule> reports = [
       ReportModule(
-          crime_discription: "Lorem Ipsum",
+          crime_discription:
+              "Lorem Ipsum Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
           location: "Hatso Clinicals",
           medicalAssistance: false,
           occurenceTime: DateTime.now(),
           user_name: "Mariana Crunch"),
       ReportModule(
-          crime_discription: "Lorem Ipsum",
+          crime_discription:
+              "Lorem Ipsum Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?",
           location: "Hatso Clinicals",
           medicalAssistance: true,
           occurenceTime: DateTime.now(),
-          user_name: "Mariana Crunch"),
+          user_name: "Mariana Safo Snr"),
       ReportModule(
           crime_discription: "Lorem Ipsum",
           location: "Hatso Clinicals",
@@ -105,10 +107,14 @@ class _ReportPageState extends State<ReportPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ViewReport(
-                                      crimelocation: reports[index].location,
-                                      medicalassistance: reports[index].medicalAssistance,
-                                      username: reports[index].user_name,
-                                    )));
+                                          discription:
+                                              reports[index].crime_discription,
+                                          crimelocation:
+                                              reports[index].location,
+                                          medicalassistance:
+                                              reports[index].medicalAssistance,
+                                          username: reports[index].user_name,
+                                        )));
                           },
                           leading: Material(
                             borderRadius: BorderRadius.circular(25),
