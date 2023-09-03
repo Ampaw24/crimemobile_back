@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "60385182626",
+    "firebase_url": "https://crime-report-f79c1-default-rtdb.firebaseio.com",
+    "project_id": "crime-report-f79c1",
+    "storage_bucket": "crime-report-f79c1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60385182626:android:6790c78d91d967eee2a8fb",
+        "android_client_info": {
+          "package_name": "com.Tufftec.crs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60385182626-dccmibnahpgrov0j8lan2998qhrmsdcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcxyTLhNDX9znleEDYjasMPiNzPnEMYno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60385182626-dccmibnahpgrov0j8lan2998qhrmsdcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "60385182626-hpemdcil9eo784m7etime0ctat673v1b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Tufftec.crs"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:60385182626:android:d31945c5e7c3a59ce2a8fb",
+        "android_client_info": {
+          "package_name": "com.example.crimeappbackend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "60385182626-dccmibnahpgrov0j8lan2998qhrmsdcv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcxyTLhNDX9znleEDYjasMPiNzPnEMYno"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "60385182626-dccmibnahpgrov0j8lan2998qhrmsdcv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "60385182626-hpemdcil9eo784m7etime0ctat673v1b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Tufftec.crs"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
