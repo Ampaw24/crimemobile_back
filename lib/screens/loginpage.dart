@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
 import 'package:crimeappbackend/screens/dashboard/dashboard.dart';
+import 'package:crimeappbackend/screens/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../config/firebase/firebaseAuth.dart';
@@ -27,9 +28,7 @@ class _LoginPageState extends State<LoginPage> {
 
   final _adminmailController = TextEditingController();
   final _passwordController = TextEditingController();
-
   bool _isLoading = false;
-
 
   void _TextVisibility() {
     setState(() {
@@ -115,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: 15, fontWeight: FontWeight.w300),
                           ),
                           TextFormField(
-                            controller:  _passwordController,
+                            controller: _passwordController,
                             obscureText: _obsecureText,
                             decoration: InputDecoration(
                                 suffixIcon: GestureDetector(
@@ -142,10 +141,11 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => FogotPassword()));
+                                        builder: (context) =>
+                                            RegistrationScreen()));
                               },
                               child: Text(
-                                "Forgot Password..",
+                                "  Register..",
                                 style: GoogleFonts.roboto(
                                     color: AppColors.btnBlue,
                                     fontSize: 15,
@@ -157,41 +157,43 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           CustomBtn(
-                            btnClick:() async {
-                      if (!_formKey.currentState!.validate()) {
-                        return;
-                      }
+                            btnClick: () async {
+                              if (!_formKey.currentState!.validate()) {
+                                return;
+                              }
 
-                      setState(() {
-                        _isLoading = true;
-                      });
+                              setState(() {
+                                _isLoading = true;
+                              });
 
-                      String result = await _fireAuth.signIn(
-                        email: "${_adminmailController.text.trim()}@crsatu.com",
-                        password: _passwordController.text,
-                      );
+                              String result = await _fireAuth.signIn(
+                                email:
+                                    "${_adminmailController.text.trim()}@crsatu.com",
+                                password: _passwordController.text,
+                              );
 
-                      setState(() {
-                        _isLoading = false;
-                      });
-                      if (result == "success") {
-                        Map<dynamic, dynamic>? meta = await _fireProfile
-                            .getAccountDetails(_adminmailController.text);
-                        await saveBoolShare(key: "auth", data: true);
-                        await saveStringShare(
-                          key: "userDetails",
-                          data: jsonEncode(meta),
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Dashboard(),
-                          ),
-                        );
-                      } else {
-                        print("$result");
-                      }
-                    },
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              if (result == "success") {
+                                Map<dynamic, dynamic>? meta =
+                                    await _fireProfile.getAccountDetails(
+                                        _adminmailController.text);
+                                await saveBoolShare(key: "auth", data: true);
+                                await saveStringShare(
+                                  key: "userDetails",
+                                  data: jsonEncode(meta),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Dashboard(),
+                                  ),
+                                );
+                              } else {
+                                print("$result");
+                              }
+                            },
                             btnText: "Login",
                           )
                         ],

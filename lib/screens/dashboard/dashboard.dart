@@ -1,9 +1,12 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
 
+import 'dart:async';
+
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
 import 'package:crimeappbackend/screens/manage_news/managenews.dart';
 import 'package:crimeappbackend/screens/users/manageusers.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +23,9 @@ class Dashboard extends StatefulWidget {
   @override
   State<Dashboard> createState() => _DashboardState();
 }
+final DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
+
+
 
 List<DashboardCard> cardcontent = [
   DashboardCard(

@@ -1,8 +1,8 @@
 
 import 'package:crimeappbackend/config/repo.dart';
-import 'package:crimeappbackend/providers/adminDetailsprovider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../providers/userDetailsProvider.dart';
 import 'sharePreference.dart';
 
 Future<String> checkSession() async {
@@ -25,7 +25,7 @@ Future<String> checkSession() async {
     //load all data here
     Repository repo = new Repository();
     await repo.fetchUserDetails();
-    if (adminModel != null) {
+    if (userModel != null) {
       auth = "auth";
     } else {
       debugPrint("please log in");

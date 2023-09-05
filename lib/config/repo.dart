@@ -1,8 +1,9 @@
 
 
-import '../providers/adminDetailsprovider.dart';
+
+import '../providers/userDetailsProvider.dart';
 
 class Repository {
-  final AdminDetailsProvider _userDetailsProvider = AdminDetailsProvider();
+  final UserDetailsProvider _userDetailsProvider = UserDetailsProvider();
   Future<void> fetchUserDetails() => _userDetailsProvider.get();
 }

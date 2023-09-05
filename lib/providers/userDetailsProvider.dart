@@ -1,16 +1,18 @@
 import 'dart:convert';
-import 'package:crimeappbackend/module/adminmodule.dart';
+
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../config/firebase/firebaseAuth.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-final _fetcher = BehaviorSubject<AdminModel>();
-Sink<AdminModel> get _fetcherSink => _fetcher.sink;
-Stream<AdminModel> get userModelStream => _fetcher.stream;
-AdminModel? adminModel;
+import '../config/firebase/firebaseAuth.dart';
+import '../model/userModel.dart';
 
-class AdminDetailsProvider {
+final _fetcher = BehaviorSubject<UserModel>();
+Sink<UserModel> get _fetcherSink => _fetcher.sink;
+Stream<UserModel> get userModelStream => _fetcher.stream;
+UserModel? userModel;
+
+class UserDetailsProvider {
   Future<void> get() async {
     SharedPreferences? prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey("auth") && prefs.getBool("auth")!) {
@@ -20,12 +22,12 @@ class AdminDetailsProvider {
         if (kDebugMode) {
           print(decodedData);
         }
-        adminModel = AdminModel.fromJson(decodedData);
-        firebaseUserId = adminModel!.data!.firebaseId;
-        _fetcherSink.add(adminModel!);
+        userModel = UserModel.fromJson(decodedData);
+        firebaseUserId = userModel!.data!.firebaseId;
+        _fetcherSink.add(userModel!);
       }
     }  else {
-      adminModel = null;
+      userModel = null;
     }
   }
 }
