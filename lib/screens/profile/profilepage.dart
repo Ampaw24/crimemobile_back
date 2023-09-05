@@ -1,9 +1,13 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors, avoid_unnecessary_containers, dead_code
 
+import 'dart:typed_data';
+
 import 'package:crimeappbackend/core/text.dart';
+import 'package:crimeappbackend/widget/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../core/colors.dart';
 import '../../widget/appbtn.dart';
@@ -18,6 +22,13 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+    Uint8List? _image;
+  void _selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     String _userName = "Kevin Mitnic";
@@ -71,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Center(
                 child: Material(
                   borderRadius: BorderRadius.circular(60),
-                  elevation: 10,
+                  elevation: 5,
                   child: Container(
                     height: 120,
                     width: 120,
@@ -120,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     color: AppColors
                                         .btnBlue), // Change the color here
                               ),
-                              hintText:_userName,
+                              hintText: _userName,
                               hintStyle: GoogleFonts.roboto(
                                   color: Colors.black12, fontSize: 14),
                               contentPadding: const EdgeInsets.symmetric(
@@ -205,18 +216,21 @@ class _ProfilePageState extends State<ProfilePage> {
           Positioned(
             top: 80,
             left: 210,
-            child: Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                  color: AppColors.btnBlue,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Center(
-                child: Icon(
-                  weight: 17,
-                  color: Colors.white,
-                  FontAwesomeIcons.penToSquare,
-                  size: 17,
+            child: GestureDetector(
+              onTap: _selectImage,
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                    color: AppColors.btnBlue,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Center(
+                  child: Icon(
+                    weight: 17,
+                    color: Colors.white,
+                    FontAwesomeIcons.penToSquare,
+                    size: 17,
+                  ),
                 ),
               ),
             ),
@@ -228,7 +242,7 @@ class _ProfilePageState extends State<ProfilePage> {
           splashColor: AppColors.dashboardYellow,
           backgroundColor: AppColors.btnBlue,
           child: Icon(
-            FontAwesomeIcons.penToSquare,
+            Icons.done,
             color: Colors.white,
           ),
           onPressed: () {
