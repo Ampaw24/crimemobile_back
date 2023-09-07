@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, unnecessary_null_comparison, unused_field
 import 'dart:convert';
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
@@ -7,8 +7,7 @@ import 'package:crimeappbackend/screens/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../config/firebase/firebaseAuth.dart';
-import '../config/firebase/firebaseProfile.dart';
-import '../config/sharePreference.dart';
+
 import '../widget/appbtn.dart';
 import 'forgotpassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +24,6 @@ class _LoginPageState extends State<LoginPage> {
   bool _obsecureText = false;
   bool _isloading = false;
   final _auth = FirebaseAuth.instance;
-
   final _staffIdController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
@@ -172,7 +170,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Dashboard()));
+                                          builder: (context) => Dashboard(userName: _staffIdController.text,)));
                                 }
                               } catch (e) {
                                 print(e);
@@ -186,6 +184,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 )
               ],
+            ),
+               if (_isLoading)
+            Center(
+              child: SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(),
+              ),
             ),
           ]),
         ),

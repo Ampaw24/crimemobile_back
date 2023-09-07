@@ -30,7 +30,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _isLoading = false;
-  late DatabaseReference ref = databaseReference;
+  late DatabaseReference ref;
 
   @override
   void initState() {
@@ -129,7 +129,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     onTap: () async {
                       Map<String, String> admindetails = {
                         'name': _nameController.text,
-                        'mail': _studentIdController.text
+                        'mail':"${_studentIdController.text.trim()}@crsatu.com",
                       };
 
                       if (!_formKey.currentState!.validate()) {

@@ -15,23 +15,25 @@ import '../dashboard/dashboard.dart';
 import '../forgotpassword.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+
+  ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-    Uint8List? _image;
+  Uint8List? _image;
   void _selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       _image = img;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    String _userName = "Kevin Mitnic";
+
     bool _enableField = false;
     final _formKey = GlobalKey<FormState>();
     bool _obsecureText = false;
@@ -101,7 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Positioned(
                 child: Center(
                   child: Text(
-                    _userName,
+                    "",
                     style: GoogleFonts.poppins(
                       textStyle: usertext,
                     ),
@@ -131,7 +133,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     color: AppColors
                                         .btnBlue), // Change the color here
                               ),
-                              hintText: _userName,
+                              hintText: "",
                               hintStyle: GoogleFonts.roboto(
                                   color: Colors.black12, fontSize: 14),
                               contentPadding: const EdgeInsets.symmetric(
@@ -200,7 +202,9 @@ class _ProfilePageState extends State<ProfilePage> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Dashboard()));
+                                      builder: (context) => Dashboard(
+                                            userName: "",
+                                          )));
                             },
                             btnText: "Update",
                           )

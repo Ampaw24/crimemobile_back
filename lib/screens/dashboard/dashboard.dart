@@ -1,7 +1,5 @@
-// ignore_for_file: sort_child_properties_last, prefer_const_constructors
-
+// ignore_for_file: sort_child_properties_last, prefer_const_constructors, deprecated_member_use
 import 'dart:async';
-
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
 import 'package:crimeappbackend/screens/manage_news/managenews.dart';
@@ -10,6 +8,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../model/admindetal.dart';
 import '../../module/dashboardcardmodule.dart';
 import '../../widget/dashboardcards.dart';
 import '../feeds/feeds.dart';
@@ -18,14 +17,47 @@ import '../report/reportpage.dart';
 import '../tips/managetips.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({super.key});
+  final String userName;
+  const Dashboard({super.key, required this.userName});
 
   @override
   State<Dashboard> createState() => _DashboardState();
 }
-final DatabaseReference databaseReference = FirebaseDatabase.instance.reference();
 
+// void fetchNameByEmail(String email) async {
+//   // Reference to your "users" node (assuming your data is structured this way)
+//   DatabaseReference usersRef = databaseReference.child("Admindetails");
 
+//   // Query to find the user with the specified email
+//   DataSnapshot snapshot = (await usersRef
+//       .orderByChild("mail")
+//       .equalTo(email)
+//       .once()) as DataSnapshot;
+
+//   if (snapshot.value != null) {
+//     Map<dynamic, dynamic>? usersData = snapshot.value as Map?;
+
+//     // Iterate through the users and find the one with the matching email
+//     String? userName;
+//     usersData?.forEach((key, value) {
+//       if (value["email"] == email) {
+//         userName = value["name"];
+//         return;
+//       }
+//     });
+
+//     if (userName != null) {
+//       // User with the specified email found
+//       print("User's Name: $userName");
+//     } else {
+//       // User with the specified email not found
+//       print("User not found");
+//     }
+//   } else {
+//     // User with the specified email not found
+//     print("User not found");
+//   }
+// }
 
 List<DashboardCard> cardcontent = [
   DashboardCard(
@@ -61,6 +93,34 @@ List<DashboardCard> cardcontent = [
 ];
 
 class _DashboardState extends State<Dashboard> {
+  String ? _userName;
+  @override
+  void initState() {
+    loadAmindetails(widget.userName);
+    // fetchNameByEmail(widget.userName);
+    super.initState();
+  }
+
+  void loadAmindetails(var email) {
+    FirebaseDatabase.instance.setPersistenceEnabled(true);
+    DatabaseReference reference =
+        FirebaseDatabase.instance.ref().child("Admindetails");
+    reference.onValue.listen((DatabaseEvent snapshot) {
+      print("${snapshot.snapshot.value}");
+
+      if (snapshot.snapshot.value != null) {
+        Map<dynamic, dynamic>? usersData = snapshot.snapshot.value as Map?;
+        usersData?.forEach((key, value) {
+          if (value["mail"] == email) {
+            _userName = value["name"];
+            print(_userName);
+          }
+        });
+      }
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,14 +129,7 @@ class _DashboardState extends State<Dashboard> {
           child: AppBar(
             actions: [
               Text(
-                "Hello,",
-                style: GoogleFonts.montserrat(fontSize: 23),
-              ),
-              SizedBox(
-                width: 7,
-              ),
-              Text(
-                "Kevin",
+                _userName.toString(),
                 style: GoogleFonts.montserrat(
                     fontSize: 23,
                     fontWeight: FontWeight.w600,
