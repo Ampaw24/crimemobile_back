@@ -22,3 +22,22 @@ const headerboldblue2 = TextStyle(
     color: Color.fromARGB(211, 14, 14, 33),
     fontSize: 15,
     fontWeight: FontWeight.w500);
+TextStyle header1Bold = TextStyle(
+    color: AppColors.mainBlue, fontSize: 40, fontWeight: FontWeight.bold);
+TextStyle header1Regular = TextStyle(
+    color: AppColors.mainBlue, fontSize: 48, fontWeight: FontWeight.normal);
+TextStyle subheaderBold = TextStyle(
+    color: AppColors.mainBlue, fontSize: 18, fontWeight: FontWeight.bold);
+TextStyle subheaderRegular =
+    TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.normal);
+TextStyle subheaderBoldbtn =
+    TextStyle(color: AppColors.mainBlue, fontSize: 15, fontWeight: FontWeight.w600);
+TextStyle header1boldwhite =
+    TextStyle(color: Colors.white, fontSize: 39, fontWeight: FontWeight.normal);
+TextStyle subheaderBoldWhite =
+    TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.normal);
+TextStyle subheaderBoldbtn2 =
+    TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600);
+
+    TextStyle subheaderBoldbtnwhite =
+    TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600);
