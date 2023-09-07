@@ -45,6 +45,7 @@ dependencies:
   flutter_flushbar: ^0.0.2
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

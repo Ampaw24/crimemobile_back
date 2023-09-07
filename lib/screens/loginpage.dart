@@ -170,8 +170,15 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Dashboard(userName: _staffIdController.text,)));
+                                          builder: (context) => Dashboard(
+                                                userName:
+                                                    _staffIdController.text,
+                                              )));
                                 }
+                                setState(() {
+                                  _isloading =
+                                      false; // Start showing the loader
+                                });
                               } catch (e) {
                                 print(e);
                               }
@@ -185,14 +192,15 @@ class _LoginPageState extends State<LoginPage> {
                 )
               ],
             ),
-               if (_isLoading)
-            Center(
-              child: SizedBox(
-                height: 50,
-                width: 50,
-                child: CircularProgressIndicator(),
+            if (_isLoading)
+              Center(
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(),
+                ),
               ),
-            ),
+            if (_isLoading) Center(child: CircularProgressIndicator())
           ]),
         ),
       ),

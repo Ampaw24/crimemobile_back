@@ -81,41 +81,54 @@ class _ManageNewsState extends State<ManageNews> {
             backgroundColor: Colors.white,
           ),
           preferredSize: const Size.fromHeight(60)),
-      body: SingleChildScrollView(
-        child: Expanded(
-          child: ListView.builder(
-              itemCount: news.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) => ListTile(
-                    trailing: GestureDetector(
-                      child: Icon(
-                        FontAwesomeIcons.trashCan,
-                        size: 18,
-                        color: AppColors.btnBlue,
-                        weight: 3,
+      body: Scrollbar(
+        isAlwaysShown: true,
+        child: SingleChildScrollView(
+          child: Expanded(
+            child: ListView.builder(
+                itemCount: news.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) => ListTile(
+                      trailing: GestureDetector(
+                        child: Icon(
+                          FontAwesomeIcons.trashCan,
+                          size: 18,
+                          color: AppColors.btnBlue,
+                          weight: 3,
+                        ),
                       ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 25, horizontal: 20),
-                    leading: Image.asset(news[index].image_url),
-                    title: Text(
-                      news[index].title,
-                      style: GoogleFonts.poppins(textStyle: headerboldblue2),
-                    ),
-                    subtitle: Text(
-                      maxLines: 2,
-                      news[index].discription,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          textStyle: TextStyle()),
-                    ),
-                  )),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 25, horizontal: 20),
+                      leading: Image.asset(news[index].image_url),
+                      title: Text(
+                        news[index].title,
+                        style: GoogleFonts.poppins(textStyle: headerboldblue2),
+                      ),
+                      subtitle: Text(
+                        maxLines: 2,
+                        news[index].discription,
+                        style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w200,
+                            textStyle: TextStyle()),
+                      ),
+                    )),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
           backgroundColor: AppColors.btnBlue,
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              showModalBottomSheet(
+                  context: context, builder: (context) =>Container()
+                  
+                  
+                  
+                  
+                  );
+            });
+          },
           child: Icon(
             FontAwesomeIcons.add,
             color: Colors.white,

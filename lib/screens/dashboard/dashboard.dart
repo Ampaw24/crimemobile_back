@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
+import 'package:crimeappbackend/screens/loginpage.dart';
 import 'package:crimeappbackend/screens/manage_news/managenews.dart';
 import 'package:crimeappbackend/screens/users/manageusers.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -15,6 +16,7 @@ import '../feeds/feeds.dart';
 import '../profile/profilepage.dart';
 import '../report/reportpage.dart';
 import '../tips/managetips.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Dashboard extends StatefulWidget {
   final String userName;
@@ -23,41 +25,6 @@ class Dashboard extends StatefulWidget {
   @override
   State<Dashboard> createState() => _DashboardState();
 }
-
-// void fetchNameByEmail(String email) async {
-//   // Reference to your "users" node (assuming your data is structured this way)
-//   DatabaseReference usersRef = databaseReference.child("Admindetails");
-
-//   // Query to find the user with the specified email
-//   DataSnapshot snapshot = (await usersRef
-//       .orderByChild("mail")
-//       .equalTo(email)
-//       .once()) as DataSnapshot;
-
-//   if (snapshot.value != null) {
-//     Map<dynamic, dynamic>? usersData = snapshot.value as Map?;
-
-//     // Iterate through the users and find the one with the matching email
-//     String? userName;
-//     usersData?.forEach((key, value) {
-//       if (value["email"] == email) {
-//         userName = value["name"];
-//         return;
-//       }
-//     });
-
-//     if (userName != null) {
-//       // User with the specified email found
-//       print("User's Name: $userName");
-//     } else {
-//       // User with the specified email not found
-//       print("User not found");
-//     }
-//   } else {
-//     // User with the specified email not found
-//     print("User not found");
-//   }
-// }
 
 List<DashboardCard> cardcontent = [
   DashboardCard(
@@ -93,13 +60,16 @@ List<DashboardCard> cardcontent = [
 ];
 
 class _DashboardState extends State<Dashboard> {
-  String ? _userName;
+  String? _userName;
+  bool isLoading = false;
   @override
   void initState() {
     loadAmindetails(widget.userName);
     // fetchNameByEmail(widget.userName);
     super.initState();
   }
+
+  List<String> dropdownItems = ['Option 1', 'Option 2', 'Option 3'];
 
   void loadAmindetails(var email) {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
@@ -121,6 +91,48 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirm Logout!'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure You want to Logout this section?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Log Out'),
+              onPressed: () async {
+                setState(() {
+                  isLoading = true;
+                });
+                await FirebaseAuth.instance.signOut();
+
+                setState(() {
+                  isLoading = false;
+                });
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,28 +140,59 @@ class _DashboardState extends State<Dashboard> {
       appBar: PreferredSize(
           child: AppBar(
             actions: [
-              Text(
-                _userName.toString(),
-                style: GoogleFonts.montserrat(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.btnBlue),
-              ),
-              SizedBox(
-                width: 110,
-              ),
               Container(
-                margin: const EdgeInsets.only(right: 20),
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/profile.jpg"),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(20)),
+                margin: const EdgeInsets.only(
+                  right: 80,
+                ),
+                child: Text(
+                  "Hello, ${_userName.toString()}",
+                  style: GoogleFonts.montserrat(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.btnBlue),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => _showMyDialog(),
+                child: Stack(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      margin: const EdgeInsets.only(right: 15),
+                      width: 110,
+                      height: 35,
+                      decoration: BoxDecoration(
+                          color: AppColors.btnBlue.withOpacity(.7),
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 60),
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: AssetImage("assets/profile.jpg"),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(20)),
+                      ),
+                    ),
+                    Positioned(
+                      top: 8,
+                      left: 45,
+                      right: 10,
+                      child: Text(
+                        "Sign Out",
+                        style: GoogleFonts.lato(
+                            fontSize: 13,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    )
+                  ],
+                ),
               )
             ],
-            leading: Icon(Icons.menu_outlined),
+            // leading: Icon(Icons.menu_outlined),
             backgroundColor: Colors.white,
           ),
           preferredSize: const Size.fromHeight(60)),
@@ -187,7 +230,11 @@ class _DashboardState extends State<Dashboard> {
               },
             ),
           ),
+          if(isLoading)
+            Center(child: CircularProgressIndicator())
+          
         ],
+        
       ),
     );
   }
