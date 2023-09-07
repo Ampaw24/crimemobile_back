@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, sort_child_properties_last
 import 'dart:convert';
-
 import 'package:crimeappbackend/core/colors.dart';
 import 'package:crimeappbackend/core/text.dart';
 import 'package:crimeappbackend/screens/dashboard/dashboard.dart';
@@ -12,6 +11,7 @@ import '../config/firebase/firebaseProfile.dart';
 import '../config/sharePreference.dart';
 import '../widget/appbtn.dart';
 import 'forgotpassword.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,10 +23,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obsecureText = false;
-  FireAuth _fireAuth = FireAuth();
-  FireProfile _fireProfile = FireProfile();
+  bool _isloading = false;
+  final _auth = FirebaseAuth.instance;
 
-  final _adminmailController = TextEditingController();
+  final _staffIdController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                                 fontSize: 15, fontWeight: FontWeight.w300),
                           ),
                           TextFormField(
-                            controller: _adminmailController,
+                            controller: _staffIdController,
                             cursorColor: AppColors.btnBlue,
                             decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                                 border: OutlineInputBorder()),
                           ),
                           Container(
-                            margin: const EdgeInsets.only(left: 170, top: 10),
+                            margin: const EdgeInsets.only(left: 200, top: 10),
                             child: GestureDetector(
                               onTap: () {
                                 Navigator.pushReplacement(
@@ -148,8 +148,8 @@ class _LoginPageState extends State<LoginPage> {
                                 "  Register..",
                                 style: GoogleFonts.roboto(
                                     color: AppColors.btnBlue,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w300),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400),
                               ),
                             ),
                           ),
@@ -158,40 +158,24 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           CustomBtn(
                             btnClick: () async {
-                              if (!_formKey.currentState!.validate()) {
-                                return;
-                              }
+                              try {
+                                setState(() {
+                                  _isloading = true; // Start showing the loader
+                                });
 
-                              setState(() {
-                                _isLoading = true;
-                              });
+                                final user =
+                                    await _auth.signInWithEmailAndPassword(
+                                        email: _staffIdController.text,
+                                        password: _passwordController.text);
 
-                              String result = await _fireAuth.signIn(
-                                email:
-                                    "${_adminmailController.text.trim()}@crsatu.com",
-                                password: _passwordController.text,
-                              );
-
-                              setState(() {
-                                _isLoading = false;
-                              });
-                              if (result == "success") {
-                                Map<dynamic, dynamic>? meta =
-                                    await _fireProfile.getAccountDetails(
-                                        _adminmailController.text);
-                                await saveBoolShare(key: "auth", data: true);
-                                await saveStringShare(
-                                  key: "userDetails",
-                                  data: jsonEncode(meta),
-                                );
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Dashboard(),
-                                  ),
-                                );
-                              } else {
-                                print("$result");
+                                if (user != null) {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Dashboard()));
+                                }
+                              } catch (e) {
+                                print(e);
                               }
                             },
                             btnText: "Login",
