@@ -45,6 +45,7 @@ dependencies:
   flutter_flushbar: ^0.0.2
   file_picker: ^5.5.0
   firebase_storage: ^11.2.6
+  fluttertoast: ^8.2.2
 
 
 

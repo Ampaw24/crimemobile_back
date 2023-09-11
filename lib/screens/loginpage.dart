@@ -200,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: CircularProgressIndicator(),
                 ),
               ),
-            if (_isLoading) Center(child: CircularProgressIndicator())
+        
           ]),
         ),
       ),

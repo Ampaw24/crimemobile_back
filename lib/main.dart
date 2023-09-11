@@ -2,7 +2,7 @@ import 'package:crimeappbackend/screens/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'core/firebase_option.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,6 +12,8 @@ Future<void> main() async {
   );
   runApp(const MyApp());
 }
+
+GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -25,6 +27,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      builder: FToastBuilder(),
+      navigatorKey: navigatorKey,
       title: 'Crime Monitoring Dashboard',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),

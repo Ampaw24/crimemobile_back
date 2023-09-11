@@ -230,11 +230,8 @@ class _DashboardState extends State<Dashboard> {
               },
             ),
           ),
-          if(isLoading)
-            Center(child: CircularProgressIndicator())
-          
+          if (isLoading) Center(child: CircularProgressIndicator())
         ],
-        
       ),
     );
   }

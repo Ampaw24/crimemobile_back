@@ -12,6 +12,7 @@ import '../../core/text.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ManageNews extends StatefulWidget {
   const ManageNews({super.key});
@@ -43,16 +44,20 @@ class _ManageNewsState extends State<ManageNews> {
   ];
 
   TextEditingController newsTitleController = TextEditingController();
-  TextEditingController newsDescriptionController =
-      TextEditingController();
+  TextEditingController newsDescriptionController = TextEditingController();
   TextEditingController file = TextEditingController();
   final storageRef = FirebaseStorage.instance.ref();
-
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String selectedFileName = "Attach File";
   String? filename;
   PlatformFile? pickedFile;
   bool isLoading = false;
   File? fileToDisplay;
+  //News data fetch
+  Map? _newsVals;
+  String? newsTitle;
+  String? newsDescription;
+  final _newsCollection = FirebaseDatabase.instance.ref('News');
 
   Future<void> _pickFile() async {
     try {
@@ -76,7 +81,17 @@ class _ManageNewsState extends State<ManageNews> {
     } catch (e) {}
   }
 
-  late DatabaseReference dbRef;
+  deleteMessage(key) {
+    _newsCollection.child(key).remove();
+  }
+
+  DatabaseReference? dbRef;
+
+  @override
+  void initState() {
+    super.initState();
+    dbRef = FirebaseDatabase.instance.ref().child('News');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,37 +126,62 @@ class _ManageNewsState extends State<ManageNews> {
             backgroundColor: Colors.white,
           ),
           preferredSize: const Size.fromHeight(60)),
-      body: Scrollbar(
-        isAlwaysShown: true,
-        child: Expanded(
-          child: ListView.builder(
-              itemCount: news.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) => ListTile(
-                    trailing: GestureDetector(
-                      child: Icon(
-                        FontAwesomeIcons.trashCan,
-                        size: 18,
-                        color: AppColors.btnBlue,
-                        weight: 3,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                        vertical: 25, horizontal: 20),
-                    leading: Image.asset(news[index].image_url),
-                    title: Text(
-                      news[index].title,
-                      style: GoogleFonts.poppins(textStyle: headerboldblue2),
-                    ),
-                    subtitle: Text(
-                      maxLines: 2,
-                      news[index].discription,
-                      style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w200,
-                          textStyle: TextStyle()),
-                    ),
-                  )),
+      body: SafeArea(
+        child: Scrollbar(
+          child: Expanded(
+              child: StreamBuilder(
+                  stream: _newsCollection.onValue,
+                  builder: (context, snapShot) {
+                    if (snapShot.hasData &&
+                        !snapShot.hasError &&
+                        snapShot.data?.snapshot.value != null) {
+                      Map _newsCollections =
+                          snapShot.data?.snapshot.value as Map;
+                      List _newsItems = [];
+                      _newsCollections.forEach((index, data) =>
+                          _newsItems.add({"key": index, ...data}));
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _newsItems.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            trailing: GestureDetector(
+                              onTap: () async {
+                                await deleteMessage(_newsItems[index]['key']);
+
+                                Fluttertoast.showToast(
+                                    msg: "News Deleted!!",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.black45,
+                                    textColor: Colors.white,
+                                    fontSize: 15.0);
+                              },
+                              child: Icon(
+                                FontAwesomeIcons.trashCan,
+                                size: 18,
+                                color: AppColors.btnBlue,
+                                weight: 3,
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 25, horizontal: 20),
+                            title: Text(_newsItems[index]['title'],
+                                style: GoogleFonts.poppins(
+                                    textStyle: headerboldblue2)),
+                            subtitle: Text(_newsItems[index]['description'],
+                                style: GoogleFonts.poppins(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w200,
+                                    textStyle: TextStyle())),
+                          );
+                        },
+                      );
+                    }
+                    return Container();
+                  })),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -149,200 +189,228 @@ class _ManageNewsState extends State<ManageNews> {
           onPressed: () {
             setState(() {
               showModalBottomSheet(
+                  isScrollControlled: true,
                   context: context,
-                  builder: (context) => SingleChildScrollView(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Add News",
-                                style: GoogleFonts.montserrat(
-                                  textStyle: headerboldblue1,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
+                  builder: (context) => Wrap(children: [
+                        SingleChildScrollView(
+                          child: SafeArea(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.80,
+                              child: SingleChildScrollView(
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
+                                  children: [
+                                    SizedBox(
+                                      height: 8,
+                                    ),
                                     Text(
-                                      'News Headline',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                                      "Add News",
+                                      style: GoogleFonts.lato(
+                                        textStyle: headerboldblue1,
                                       ),
                                     ),
-                                    TextFormField(
-                                      controller: newsTitleController,
-                                      decoration: InputDecoration(
-                                        hintText: 'Enter title',
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'News Detail',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextFormField(
-                                      controller:
-                                          newsDescriptionController,
-                                      maxLines: 2,
-                                      decoration: InputDecoration(
-                                        hintText: 'Enter description',
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    // Add widgets for file upload here
-                                    // You can use a package like file_picker to handle file uploads
-                                    SizedBox(height: 16),
-                                    Container(
-                                      height: 30,
-                                      width: 300,
-                                      child: Center(
-                                        child: filename.toString() == "null"
-                                            ? Text("No file selected")
-                                            : Text(filename.toString()),
-                                      ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: _pickFile,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                        ),
-                                        margin: const EdgeInsets.only(top: 20),
-                                        child: Center(
-                                          child: Row(
-                                            children: [
-                                              SizedBox(
-                                                width: 10,
+                                    SingleChildScrollView(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'News Headline',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                              Icon(
-                                                Icons.attach_file,
-                                                color: Colors.white,
+                                            ),
+                                            TextFormField(
+                                              controller: newsTitleController,
+                                              decoration: InputDecoration(
+                                                hintText: 'Enter title',
                                               ),
-                                              SizedBox(
-                                                width: 10,
+                                            ),
+                                            SizedBox(height: 10),
+                                            Text(
+                                              'News Detail',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                              Text(
-                                                "Choose File",
-                                                style: GoogleFonts.montserrat(
-                                                    textStyle:
-                                                        subheaderBoldbtnwhite),
+                                            ),
+                                            TextFormField(
+                                              controller:
+                                                  newsDescriptionController,
+                                              maxLines: 2,
+                                              decoration: InputDecoration(
+                                                hintText: 'Enter description',
                                               ),
-                                            ],
-                                          ),
-                                        ),
-                                        height: 50,
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.mainBlue,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                      ),
-                                    ),
+                                            ),
+                                            SizedBox(height: 10),
+                                            // Add widgets for file upload here
+                                            // You can use a package like file_picker to handle file uploads
+                                            SizedBox(height: 16),
+                                            Container(
+                                              height: 30,
+                                              width: 300,
+                                              child: Center(
+                                                child:
+                                                    Text(filename.toString()),
+                                              ),
+                                            ),
+                                            GestureDetector(
+                                              onTap: _pickFile,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                ),
+                                                margin: const EdgeInsets.only(
+                                                    top: 20),
+                                                child: Center(
+                                                  child: Row(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Icon(
+                                                        Icons.attach_file,
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Center(
+                                                        child: Text(
+                                                          "Choose Image",
+                                                          style: GoogleFonts
+                                                              .montserrat(
+                                                                  textStyle:
+                                                                      subheaderBoldbtnwhite),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                height: 50,
+                                                width: 300,
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.mainBlue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                            ),
 
-                                    GestureDetector(
-                                      onTap: () {
-                                        Map<String, String> assignment = {
-                                          'title':
-                                             newsTitleController.text,
-                                          'description':
-                                              newsDescriptionController
-                                                  .text,
-                                        };
-                                        final selctedFile = storageRef
-                                            .child(pickedFile.toString());
+                                            GestureDetector(
+                                              onTap: () {
+                                                Map<String, String> news = {
+                                                  'title':
+                                                      newsTitleController.text,
+                                                  'description':
+                                                      newsDescriptionController
+                                                          .text,
+                                                };
+                                                // final selctedFile = storageRef
+                                                //     .child(pickedFile.toString());
 
-                                        dbRef.push().set(news).then((_) {
-                                          print("Data Pushed succefulluy");
-                                          Flushbar(
-                                            title: "Assignment Sent",
-                                            message:
-                                                "Assignment ${newsTitleController.text} posted",
-                                            duration: Duration(seconds: 4),
-                                            icon: Icon(
-                                                Icons.done_outline_rounded,
-                                                color: Colors.white),
-                                            backgroundColor: Color.fromARGB(
-                                                    255, 22, 149, 195)
-                                                .withOpacity(0.6),
-                                            flushbarPosition:
-                                                FlushbarPosition.TOP,
-                                            animationDuration:
-                                                Duration(milliseconds: 500),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            margin: EdgeInsets.all(8.0),
-                                            onTap: (flushbar) {
-                                              flushbar.dismiss();
-                                            },
-                                          ).show(context);
+                                                dbRef
+                                                    ?.push()
+                                                    .set(news)
+                                                    .then((_) {
+                                                  Flushbar(
+                                                    title: "News Posted",
+                                                    message:
+                                                        "News ${newsTitleController.text} posted",
+                                                    duration:
+                                                        Duration(seconds: 4),
+                                                    icon: Icon(
+                                                        Icons
+                                                            .done_outline_rounded,
+                                                        color: Colors.white),
+                                                    backgroundColor:
+                                                        Color.fromARGB(
+                                                                255, 43, 51, 54)
+                                                            .withOpacity(0.6),
+                                                    flushbarPosition:
+                                                        FlushbarPosition.TOP,
+                                                    animationDuration: Duration(
+                                                        milliseconds: 500),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    margin: EdgeInsets.all(8.0),
+                                                    onTap: (flushbar) {
+                                                      flushbar.dismiss();
+                                                    },
+                                                  ).show(context);
 
-                                          newsTitleController.text = "";
-                                          newsDescriptionController.text =
-                                              "";
-                                        }).catchError((_) {
-                                          Flushbar(
-                                            title: "Assignment Post Error",
-                                            message:
-                                                "Assignment ${newsTitleController.text} Error",
-                                            duration: Duration(seconds: 4),
-                                            icon: Icon(
-                                                Icons.done_outline_rounded,
-                                                color: Colors.white),
-                                            backgroundColor:
-                                                Color.fromARGB(255, 237, 51, 51)
-                                                    .withOpacity(0.6),
-                                            flushbarPosition:
-                                                FlushbarPosition.TOP,
-                                            animationDuration:
-                                                Duration(milliseconds: 300),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            margin: EdgeInsets.all(8.0),
-                                            onTap: (flushbar) {
-                                              flushbar.dismiss();
-                                            },
-                                          ).show(context);
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 10,
+                                                  newsTitleController.text = "";
+                                                  newsDescriptionController
+                                                      .text = "";
+                                                }).catchError((_) {
+                                                  Flushbar(
+                                                    title: "News Post Error",
+                                                    message:
+                                                        "News ${newsTitleController.text} Error",
+                                                    duration:
+                                                        Duration(seconds: 4),
+                                                    icon: Icon(
+                                                        Icons
+                                                            .done_outline_rounded,
+                                                        color: Colors.white),
+                                                    backgroundColor:
+                                                        Color.fromARGB(255, 237,
+                                                                51, 51)
+                                                            .withOpacity(0.6),
+                                                    flushbarPosition:
+                                                        FlushbarPosition.TOP,
+                                                    animationDuration: Duration(
+                                                        milliseconds: 300),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    margin: EdgeInsets.all(8.0),
+                                                    onTap: (flushbar) {
+                                                      flushbar.dismiss();
+                                                    },
+                                                  ).show(context);
+                                                });
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                ),
+                                                margin: const EdgeInsets.only(
+                                                    top: 20),
+                                                child: Center(
+                                                  child: Text(
+                                                    "Upload Image",
+                                                    style: GoogleFonts.montserrat(
+                                                        textStyle:
+                                                            subheaderBoldbtnwhite),
+                                                  ),
+                                                ),
+                                                height: 50,
+                                                width: 300,
+                                                decoration: BoxDecoration(
+                                                    color: AppColors.mainBlue,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        margin: const EdgeInsets.only(top: 20),
-                                        child: Center(
-                                          child: Text(
-                                            "Upload",
-                                            style: GoogleFonts.montserrat(
-                                                textStyle:
-                                                    subheaderBoldbtnwhite),
-                                          ),
-                                        ),
-                                        height: 50,
-                                        width: 300,
-                                        decoration: BoxDecoration(
-                                            color: AppColors.mainBlue,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ));
+                      ]));
             });
           },
           child: Icon(
