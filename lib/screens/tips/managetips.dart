@@ -24,6 +24,7 @@ class ManageTips extends StatefulWidget {
 class _ManageTipsState extends State<ManageTips> {
   TextEditingController newsTitleController = TextEditingController();
   TextEditingController newsDescriptionController = TextEditingController();
+  TextEditingController newsIdController = TextEditingController();
   TextEditingController file = TextEditingController();
   final storageRef = FirebaseStorage.instance.ref();
 
@@ -126,6 +127,23 @@ class _ManageTipsState extends State<ManageTips> {
                         itemCount: _newsItems.length,
                         itemBuilder: (context, index) {
                           return ListTile(
+                            leading: Container(
+                              height: 100,
+                              width: 70,
+                              child: Center(
+                                child: Text(
+                                  _newsItems[index]['ID'],
+                                  style: GoogleFonts.roboto(
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 27,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: AppColors.dashboardYellow,
+                              ),
+                            ),
                             trailing: GestureDetector(
                               onTap: () async {
                                 await deleteMessage(_newsItems[index]['key']);
@@ -204,12 +222,12 @@ class _ManageTipsState extends State<ManageTips> {
                                               ),
                                             ),
                                             TextFormField(
-                                              controller: newsTitleController,
+                                              controller: newsIdController,
                                               decoration: InputDecoration(
                                                 hintText: 'Select Tip Id',
                                               ),
                                             ),
-                                            SizedBox(height: 10),
+                                            SizedBox(height: 15),
                                             Text(
                                               'Tip Header',
                                               style: TextStyle(
@@ -247,6 +265,7 @@ class _ManageTipsState extends State<ManageTips> {
                                             GestureDetector(
                                               onTap: () {
                                                 Map<String, String> tips = {
+                                                  'ID': newsIdController.text,
                                                   'title':
                                                       newsTitleController.text,
                                                   'description':
@@ -287,9 +306,11 @@ class _ManageTipsState extends State<ManageTips> {
                                                     },
                                                   ).show(context);
 
+                                                  newsIdController.text = "";
                                                   newsTitleController.text = "";
                                                   newsDescriptionController
                                                       .text = "";
+                                                      
                                                 }).catchError((_) {
                                                   Flushbar(
                                                     title: "Tip Post Error",
