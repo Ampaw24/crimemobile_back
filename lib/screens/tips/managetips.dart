@@ -1,7 +1,5 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
-
 import 'dart:io';
-
 import 'package:crimeappbackend/module/newsmodules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flushbar/flutter_flushbar.dart';
@@ -20,7 +18,6 @@ class ManageTips extends StatefulWidget {
   @override
   State<ManageTips> createState() => _ManageTipsState();
 }
-
 class _ManageTipsState extends State<ManageTips> {
   TextEditingController newsTitleController = TextEditingController();
   TextEditingController newsDescriptionController = TextEditingController();
@@ -310,7 +307,7 @@ class _ManageTipsState extends State<ManageTips> {
                                                   newsTitleController.text = "";
                                                   newsDescriptionController
                                                       .text = "";
-                                                      
+
                                                 }).catchError((_) {
                                                   Flushbar(
                                                     title: "Tip Post Error",
