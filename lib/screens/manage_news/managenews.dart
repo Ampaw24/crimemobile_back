@@ -102,7 +102,7 @@ class _ManageNewsState extends State<ManageNews> {
               Text(
                 "Manage News",
                 style: GoogleFonts.montserrat(
-                    fontSize: 23,
+                    fontSize: 20,
                     fontWeight: FontWeight.w600,
                     color: AppColors.btnBlue),
               ),
