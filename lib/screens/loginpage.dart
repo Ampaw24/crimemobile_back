@@ -165,6 +165,15 @@ class _LoginPageState extends State<LoginPage> {
                                     await _auth.signInWithEmailAndPassword(
                                         email: _staffIdController.text,
                                         password: _passwordController.text);
+                                        
+                                if (_isLoading)
+                                  Center(
+                                    child: SizedBox(
+                                      height: 100,
+                                      width: 100,
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
 
                                 if (user != null) {
                                   Navigator.pushReplacement(
@@ -192,15 +201,6 @@ class _LoginPageState extends State<LoginPage> {
                 )
               ],
             ),
-            if (_isLoading)
-              Center(
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-        
           ]),
         ),
       ),

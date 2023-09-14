@@ -18,7 +18,9 @@ class ManageUsers extends StatefulWidget {
 }
 
 class _ManageUsersState extends State<ManageUsers> {
-  DatabaseReference ref = FirebaseDatabase.instance.ref();
+
+ final _usersCollections = FirebaseDatabase.instance.ref('Users');
+
   List<UserModule> user = [
     UserModule(
         currentLevel: "L 200",
@@ -35,6 +37,14 @@ class _ManageUsersState extends State<ManageUsers> {
         userId: "01203769D",
         userName: "Ampaw Juriels"),
   ];
+
+   DatabaseReference? dbRef;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  dbRef = FirebaseDatabase.instance.ref().child('Users');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +159,7 @@ class _ManageUsersState extends State<ManageUsers> {
                                               ),
                                             ),
                                           ),
-
+                                      
                                           Container(
                                             margin: const EdgeInsets.only(
                                                 right: 10),

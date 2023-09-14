@@ -22,41 +22,24 @@ class ManageNews extends StatefulWidget {
 }
 
 class _ManageNewsState extends State<ManageNews> {
-  List<NewsModule> news = [
-    NewsModule(
-        title: "Hakks",
-        discription: "hdfhagfygdfhsgdfchsufhscjiashcuwehfuischsufhy \n hydydy",
-        image_url: "assets/loading.gif",
-        author: "Figaro",
-        date: DateTime.now()),
-    NewsModule(
-        title: "Hakks",
-        discription: "hdfhagfygdfhsgdfchsufhscjiashcuwehfuischsufhy \n hydydy",
-        image_url: "assets/loading.gif",
-        author: "Figaro",
-        date: DateTime.now()),
-    NewsModule(
-        title: "Hakks",
-        discription: "hdfhagfygdfhsgdfchsufhscjiashcuwehfuischsufhy \n hydydy",
-        image_url: "assets/loading.gif",
-        author: "Figaro",
-        date: DateTime.now()),
-  ];
-
   TextEditingController newsTitleController = TextEditingController();
   TextEditingController newsDescriptionController = TextEditingController();
   TextEditingController file = TextEditingController();
   final storageRef = FirebaseStorage.instance.ref();
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String selectedFileName = "Attach File";
   String? filename;
   PlatformFile? pickedFile;
   bool isLoading = false;
   File? fileToDisplay;
+
   //News data fetch
   Map? _newsVals;
   String? newsTitle;
   String? newsDescription;
+
   final _newsCollection = FirebaseDatabase.instance.ref('News');
 
   Future<void> _pickFile() async {
@@ -190,13 +173,14 @@ class _ManageNewsState extends State<ManageNews> {
             setState(() {
               showModalBottomSheet(
                   isScrollControlled: true,
+                  enableDrag: true,
                   context: context,
-                  builder: (context) => Wrap(children: [
-                        SingleChildScrollView(
-                          child: SafeArea(
+                  builder: (context) => SingleChildScrollView(
+                        child: Wrap(children: [
+                          SafeArea(
                             child: Container(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.80,
+                              height: MediaQuery.of(context).size.height * 0.60,
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
@@ -385,7 +369,7 @@ class _ManageNewsState extends State<ManageNews> {
                                                     top: 20),
                                                 child: Center(
                                                   child: Text(
-                                                    "Upload Image",
+                                                    "Create News",
                                                     style: GoogleFonts.montserrat(
                                                         textStyle:
                                                             subheaderBoldbtnwhite),
@@ -409,8 +393,8 @@ class _ManageNewsState extends State<ManageNews> {
                               ),
                             ),
                           ),
-                        ),
-                      ]));
+                        ]),
+                      ));
             });
           },
           child: Icon(

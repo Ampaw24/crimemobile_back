@@ -5,7 +5,9 @@ import 'package:crimeappbackend/module/reportsmodule.dart';
 import 'package:crimeappbackend/screens/report/viewreport.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -19,7 +21,9 @@ class ReportPage extends StatefulWidget {
 
 class _ReportPageState extends State<ReportPage> {
   final _reportCollection = FirebaseDatabase.instance.ref('Crime Report');
+
   DatabaseReference? dbRef;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -32,6 +36,10 @@ class _ReportPageState extends State<ReportPage> {
     List<ReportModule> reports = [];
     int results = reports.length;
 
+    deleteMessage(key) {
+      _reportCollection.child(key).remove();
+    }
+
     return Scaffold(
       appBar: PreferredSize(
           child: AppBar(
@@ -40,7 +48,7 @@ class _ReportPageState extends State<ReportPage> {
                 "Manage Reports",
                 style: GoogleFonts.montserrat(
                     fontSize: 19,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w400,
                     color: AppColors.btnBlue),
               ),
               const SizedBox(
@@ -69,7 +77,7 @@ class _ReportPageState extends State<ReportPage> {
             Positioned(
               left: 15,
               child: Text(
-                "Available Reports ${results.toString()}",
+                "Available Reports",
                 style: GoogleFonts.roboto(textStyle: headerboldblue2),
               ),
             ),
@@ -84,248 +92,102 @@ class _ReportPageState extends State<ReportPage> {
                         snapShot.data?.snapshot.value != null) {
                       Map _newsCollections =
                           snapShot.data?.snapshot.value as Map;
-                      List _newsItems = [];
+                      print(_newsCollections);
+
+                      List _reportItems = [];
+
                       _newsCollections.forEach((index, data) =>
-                          _newsItems.add({"key": index, ...data}));
+                          _reportItems.add({"key": index, ...data}));
+
                       return ListView.builder(
-                          itemCount: _newsItems.length,
-                          itemBuilder: (context, index) => Slidable(
-                                child: ListTile(
-                                  trailing: GestureDetector(
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: AppColors.btnBlue,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ViewReport(
-                                                  discription: _newsItems[index]
-                                                      ['description'],
-                                                  crimelocation:
-                                                      _newsItems[index]
-                                                          ['location'],
-                                                  medicalassistance:
-                                                      reports[index]
-                                                          .medicalAssistance,
-                                                  username:
-                                                      reports[index].user_name,
-                                                )));
+                          itemCount: _reportItems.length,
+                          itemBuilder: (context, index) => ListTile(
+                                trailing: GestureDetector(
+                                  onTap: () async {
+                                    await deleteMessage(
+                                        _reportItems[index]['key']);
+                                    Fluttertoast.showToast(
+                                        msg: "Report Deleted!!",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.black45,
+                                        textColor: Colors.white,
+                                        fontSize: 15.0);
                                   },
-                                  leading: Material(
-                                    borderRadius: BorderRadius.circular(25),
-                                    elevation: 5,
-                                    child: Container(
-                                      height: 50,
-                                      width: 50,
-                                      child: reports[index].medicalAssistance
-                                          ? Icon(
-                                              FontAwesomeIcons.firstAid,
-                                              color: AppColors.dashboardRed,
-                                            )
-                                          : Icon(
-                                              FontAwesomeIcons.warning,
-                                              color: AppColors.dashboardYellow,
-                                            ),
-                                      decoration: BoxDecoration(
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                          borderRadius:
-                                              BorderRadius.circular(25)),
-                                    ),
-                                  ),
-                                  title: Text(
-                                    reports[index].user_name,
-                                    style: GoogleFonts.poppins(
-                                        textStyle: headerboldblue2),
-                                  ),
-                                  subtitle: Row(
-                                    children: [
-                                      Icon(
-                                        FontAwesomeIcons.mapLocationDot,
-                                        size: 14,
-                                        color: AppColors.btnBlue,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        _newsItems[index]['location'],
-                                      )
-                                    ],
+                                  child: Icon(
+                                    FontAwesomeIcons.trashCan,
+                                    size: 18,
+                                    color: AppColors.btnBlue,
+                                    weight: 3,
                                   ),
                                 ),
-                                endActionPane: ActionPane(
-                                  motion: const ScrollMotion(),
-                                  children: [
-                                    SlidableAction(
-                                      onPressed: (BuildContext context) {
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            // Use the AlertDialog widget to create a confirmation dialog
-                                            return AlertDialog(
-                                              title: Text('Confirm Delete'),
-                                              content: Text(
-                                                  'Are you sure you want to delete this item?'),
-                                              actions: <Widget>[
-                                                // Button to cancel the deletion
-                                                TextButton(
-                                                  child: Text('Cancel'),
-                                                  onPressed: () {
-                                                    Navigator.of(context)
-                                                        .pop(); // Close the dialog
-                                                  },
-                                                ),
-                                                // Button to confirm and delete
-                                                TextButton(
-                                                  child: Text('Delete'),
-                                                  onPressed: () {
-                                                    // Remove the item from the list
+                                onTap: () {
+                                  Get.bottomSheet(
+                                    Container(
+                                    color: Colors.red,
+                                    height: 400,
 
-                                                    // Update the UI by rebuilding the widget
-                                                    setState(() {
-                                                      reports.removeAt(index);
-                                                    });
+                                  ));
+                                  // Navigator.push(
+                                  //     context,
+                                  //     MaterialPageRoute(
+                                  //         builder: (context) => ViewReport(
+                                  //               discription: _reportItems[index]
+                                  //                   ['description'],
+                                  //               crimelocation:
+                                  //                   _reportItems[index]
+                                  //                       ['location'],
+                                  //               medicalassistance:
+                                  //                   _reportItems[index]
+                                  //                       ['medical'],
+                                  //               username: _reportItems[index]
+                                  //                   ['username'],
+                                  //             ))
 
-                                                    // Close the dialog
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                ),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                      backgroundColor: Color(0xFFFE4A49),
-                                      foregroundColor: Colors.white,
-                                      icon: FontAwesomeIcons.trashCan,
-                                      label: 'Delete',
+                                  //             );
+                                },
+                                leading: Material(
+                                  borderRadius: BorderRadius.circular(25),
+                                  elevation: 5,
+                                  child: Container(
+                                    height: 50,
+                                    width: 50,
+                                    child: Icon(
+                                      FontAwesomeIcons.circleExclamation,
+                                      color: AppColors.cardRed,
                                     ),
+                                    decoration: BoxDecoration(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255),
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
+                                  ),
+                                ),
+                                title: Text(
+                                  _reportItems[index]['username'],
+                                  style: GoogleFonts.poppins(
+                                      textStyle: headerboldblue2),
+                                ),
+                                subtitle: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on,
+                                      size: 14,
+                                      color: AppColors.btnBlue,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      _reportItems[index]['location'],
+                                    )
                                   ],
                                 ),
                               ));
                     }
                     return Container();
                   }),
-
-              // child: ListView.builder(
-              //     itemCount: reports.length,
-              //     itemBuilder: (context, index) => Slidable(
-              //           child: ListTile(
-              //             trailing: GestureDetector(
-              //               child: Icon(
-              //                 Icons.delete,
-              //                 color: AppColors.btnBlue,
-              //               ),
-              //             ),
-              //             onTap: () {
-              //               Navigator.push(
-              //                   context,
-              //                   MaterialPageRoute(
-              //                       builder: (context) => ViewReport(
-              //                             discription:
-              //                                 reports[index].crime_discription,
-              //                             crimelocation:
-              //                                 reports[index].location,
-              //                             medicalassistance:
-              //                                 reports[index].medicalAssistance,
-              //                             username: reports[index].user_name,
-              //                           )));
-              //             },
-              //             leading: Material(
-              //               borderRadius: BorderRadius.circular(25),
-              //               elevation: 5,
-              //               child: Container(
-              //                 height: 50,
-              //                 width: 50,
-              //                 child: reports[index].medicalAssistance
-              //                     ? Icon(
-              //                         FontAwesomeIcons.firstAid,
-              //                         color: AppColors.dashboardRed,
-              //                       )
-              //                     : Icon(
-              //                         FontAwesomeIcons.warning,
-              //                         color: AppColors.dashboardYellow,
-              //                       ),
-              //                 decoration: BoxDecoration(
-              //                     color: Color.fromARGB(255, 255, 255, 255),
-              //                     borderRadius: BorderRadius.circular(25)),
-              //               ),
-              //             ),
-              //             title: Text(
-              //               reports[index].user_name,
-              //               style:
-              //                   GoogleFonts.poppins(textStyle: headerboldblue2),
-              //             ),
-              //             subtitle: Row(
-              //               children: [
-              //                 Icon(
-              //                   FontAwesomeIcons.mapLocationDot,
-              //                   size: 14,
-              //                   color: AppColors.btnBlue,
-              //                 ),
-              //                 SizedBox(
-              //                   width: 5,
-              //                 ),
-              //                 Text(reports[index].location)
-              //               ],
-              //             ),
-              //           ),
-              //           endActionPane: ActionPane(
-
-              //             motion: const ScrollMotion(),
-
-              //             children: [
-              //               SlidableAction(
-              //                 onPressed: (BuildContext context) {
-              //                   showDialog(
-              //                     context: context,
-              //                     builder: (BuildContext context) {
-              //                       // Use the AlertDialog widget to create a confirmation dialog
-              //                       return AlertDialog(
-              //                         title: Text('Confirm Delete'),
-              //                         content: Text(
-              //                             'Are you sure you want to delete this item?'),
-              //                         actions: <Widget>[
-              //                           // Button to cancel the deletion
-              //                           TextButton(
-              //                             child: Text('Cancel'),
-              //                             onPressed: () {
-              //                               Navigator.of(context)
-              //                                   .pop(); // Close the dialog
-              //                             },
-              //                           ),
-              //                           // Button to confirm and delete
-              //                           TextButton(
-              //                             child: Text('Delete'),
-              //                             onPressed: () {
-              //                               // Remove the item from the list
-
-              //                               // Update the UI by rebuilding the widget
-              //                               setState(() {
-              //                                 reports.removeAt(index);
-              //                               });
-
-              //                               // Close the dialog
-              //                               Navigator.of(context).pop();
-              //                             },
-              //                           ),
-              //                         ],
-              //                       );
-              //                     },
-              //                   );
-              //                 },
-              //                 backgroundColor: Color(0xFFFE4A49),
-              //                 foregroundColor: Colors.white,
-              //                 icon: FontAwesomeIcons.trashCan,
-              //                 label: 'Delete',
-              //               ),
-              //             ],
-              //           ),
-              //         )),
             )
           ],
         ),

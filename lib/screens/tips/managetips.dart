@@ -1,5 +1,7 @@
 // ignore_for_file: sort_child_properties_last, prefer_const_constructors
+
 import 'dart:io';
+
 import 'package:crimeappbackend/module/newsmodules.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flushbar/flutter_flushbar.dart';
@@ -18,49 +20,27 @@ class ManageTips extends StatefulWidget {
   @override
   State<ManageTips> createState() => _ManageTipsState();
 }
+
 class _ManageTipsState extends State<ManageTips> {
   TextEditingController newsTitleController = TextEditingController();
   TextEditingController newsDescriptionController = TextEditingController();
-  TextEditingController newsIdController = TextEditingController();
   TextEditingController file = TextEditingController();
-  final storageRef = FirebaseStorage.instance.ref();
 
+  final storageRef = FirebaseStorage.instance.ref();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   String selectedFileName = "Attach File";
   String? filename;
   PlatformFile? pickedFile;
   bool isLoading = false;
   File? fileToDisplay;
-  //News data fetch
-  Map? _newsVals;
-  String? newsTitle;
-  String? newsDescription;
-  final _newsCollection = FirebaseDatabase.instance.ref('Tips');
 
-  Future<void> _pickFile() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
-        allowCompression: true,
-      );
-      if (result != null) {
-        PlatformFile file = result.files.first;
-        filename = result.files.first.name;
-        pickedFile = result.files.first;
-        fileToDisplay = File(pickedFile!.path.toString());
-        print("Print file: ${filename}");
-      } else {}
-      setState(() {
-        isLoading = false;
-      });
-    } catch (e) {}
-  }
+  //News data fetch
+
+  final _tipsCollection = FirebaseDatabase.instance.ref('Tips');
 
   deleteMessage(key) {
-    _newsCollection.child(key).remove();
+    _tipsCollection.child(key).remove();
   }
 
   DatabaseReference? dbRef;
@@ -77,26 +57,18 @@ class _ManageTipsState extends State<ManageTips> {
       appBar: PreferredSize(
           child: AppBar(
             actions: [
-              Text(
-                "Manage Tips",
-                style: GoogleFonts.montserrat(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.btnBlue),
+              Center(
+                child: Text(
+                  "Manage Tips",
+                  style: GoogleFonts.montserrat(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.btnBlue),
+                ),
               ),
               const SizedBox(
-                width: 50,
+                width: 120,
               ),
-              Container(
-                margin: const EdgeInsets.only(right: 20),
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/profile.jpg"),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(20)),
-              )
             ],
             leading: GestureDetector(
                 onTap: () => Navigator.pop(context),
@@ -108,47 +80,29 @@ class _ManageTipsState extends State<ManageTips> {
         child: Scrollbar(
           child: Expanded(
               child: StreamBuilder(
-                  stream: _newsCollection.onValue,
+                  stream: _tipsCollection.onValue,
                   builder: (context, snapShot) {
                     if (snapShot.hasData &&
                         !snapShot.hasError &&
                         snapShot.data?.snapshot.value != null) {
-                      Map _newsCollections =
+                      Map _tipsCollections =
                           snapShot.data?.snapshot.value as Map;
-                      List _newsItems = [];
-                      _newsCollections.forEach((index, data) =>
-                          _newsItems.add({"key": index, ...data}));
+                      List _tipsItems = [];
+                      _tipsCollections.forEach((index, data) =>
+                          _tipsItems.add({"key": index, ...data}));
 
                       return ListView.builder(
                         shrinkWrap: true,
-                        itemCount: _newsItems.length,
+                        itemCount: _tipsItems.length,
                         itemBuilder: (context, index) {
                           return ListTile(
-                            leading: Container(
-                              height: 100,
-                              width: 70,
-                              child: Center(
-                                child: Text(
-                                  _newsItems[index]['ID'],
-                                  style: GoogleFonts.roboto(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 27,
-                                      color: Colors.white),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: AppColors.dashboardYellow,
-                              ),
-                            ),
                             trailing: GestureDetector(
                               onTap: () async {
-                                await deleteMessage(_newsItems[index]['key']);
-
+                                await deleteMessage(_tipsItems[index]['key']);
                                 Fluttertoast.showToast(
                                     msg: "Tips Deleted!!",
                                     toastLength: Toast.LENGTH_SHORT,
-                                    gravity: ToastGravity.CENTER,
+                                    gravity: ToastGravity.BOTTOM,
                                     timeInSecForIosWeb: 1,
                                     backgroundColor: Colors.black45,
                                     textColor: Colors.white,
@@ -163,10 +117,10 @@ class _ManageTipsState extends State<ManageTips> {
                             ),
                             contentPadding: const EdgeInsets.symmetric(
                                 vertical: 25, horizontal: 20),
-                            title: Text(_newsItems[index]['title'],
+                            title: Text(_tipsItems[index]['title'],
                                 style: GoogleFonts.poppins(
                                     textStyle: headerboldblue2)),
-                            subtitle: Text(_newsItems[index]['description'],
+                            subtitle: Text(_tipsItems[index]['description'],
                                 style: GoogleFonts.poppins(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w200,
@@ -185,21 +139,22 @@ class _ManageTipsState extends State<ManageTips> {
             setState(() {
               showModalBottomSheet(
                   isScrollControlled: true,
+                  enableDrag: true,
                   context: context,
-                  builder: (context) => Wrap(children: [
-                        SingleChildScrollView(
-                          child: SafeArea(
+                  builder: (context) => SingleChildScrollView(
+                        child: Wrap(children: [
+                          SafeArea(
                             child: Container(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.80,
+                              height: MediaQuery.of(context).size.height * 0.70,
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      height: 8,
+                                      height: 12,
                                     ),
                                     Text(
-                                      "Add Tips",
+                                      "Add Tip",
                                       style: GoogleFonts.lato(
                                         textStyle: headerboldblue1,
                                       ),
@@ -212,21 +167,7 @@ class _ManageTipsState extends State<ManageTips> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              'Tip ID',
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            TextFormField(
-                                              controller: newsIdController,
-                                              decoration: InputDecoration(
-                                                hintText: 'Select Tip Id',
-                                              ),
-                                            ),
-                                            SizedBox(height: 15),
-                                            Text(
-                                              'Tip Header',
+                                              'Tip Title',
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
@@ -238,9 +179,9 @@ class _ManageTipsState extends State<ManageTips> {
                                                 hintText: 'Enter title',
                                               ),
                                             ),
-                                            SizedBox(height: 10),
+                                            SizedBox(height: 20),
                                             Text(
-                                              'News Detail',
+                                              'Tip Detail',
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
@@ -257,12 +198,10 @@ class _ManageTipsState extends State<ManageTips> {
                                             SizedBox(height: 10),
                                             // Add widgets for file upload here
                                             // You can use a package like file_picker to handle file uploads
-                                            SizedBox(height: 16),
 
                                             GestureDetector(
                                               onTap: () {
                                                 Map<String, String> tips = {
-                                                  'ID': newsIdController.text,
                                                   'title':
                                                       newsTitleController.text,
                                                   'description':
@@ -277,9 +216,9 @@ class _ManageTipsState extends State<ManageTips> {
                                                     .set(tips)
                                                     .then((_) {
                                                   Flushbar(
-                                                    title: "TipPosted",
+                                                    title: "News Posted",
                                                     message:
-                                                        "Tip ${newsTitleController.text} posted",
+                                                        "News ${newsTitleController.text} posted",
                                                     duration:
                                                         Duration(seconds: 4),
                                                     icon: Icon(
@@ -303,16 +242,14 @@ class _ManageTipsState extends State<ManageTips> {
                                                     },
                                                   ).show(context);
 
-                                                  newsIdController.text = "";
                                                   newsTitleController.text = "";
                                                   newsDescriptionController
                                                       .text = "";
-
                                                 }).catchError((_) {
                                                   Flushbar(
-                                                    title: "Tip Post Error",
+                                                    title: "News Post Error",
                                                     message:
-                                                        "Tip ${newsTitleController.text} Error",
+                                                        "News ${newsTitleController.text} Error",
                                                     duration:
                                                         Duration(seconds: 4),
                                                     icon: Icon(
@@ -346,7 +283,7 @@ class _ManageTipsState extends State<ManageTips> {
                                                     top: 20),
                                                 child: Center(
                                                   child: Text(
-                                                    "Upload Tips",
+                                                    "Create Tip",
                                                     style: GoogleFonts.montserrat(
                                                         textStyle:
                                                             subheaderBoldbtnwhite),
@@ -370,8 +307,8 @@ class _ManageTipsState extends State<ManageTips> {
                               ),
                             ),
                           ),
-                        ),
-                      ]));
+                        ]),
+                      ));
             });
           },
           child: Icon(
@@ -382,45 +319,3 @@ class _ManageTipsState extends State<ManageTips> {
     );
   }
 }
-
-//  ListTile(
-//                     trailing: GestureDetector(
-//                       child: Icon(
-//                         FontAwesomeIcons.trashCan,
-//                         size: 18,
-//                         color: AppColors.btnBlue,
-//                         weight: 3,
-//                       ),
-//                     ),
-//                     contentPadding: const EdgeInsets.symmetric(
-//                         vertical: 25, horizontal: 20),
-//                     leading: Container(
-//                       height: 100,
-//                       width: 70,
-//                       child: Center(
-//                         child: Text(
-//                           (index + 1).toString(),
-//                           style: GoogleFonts.roboto(
-//                               fontWeight: FontWeight.w800,
-//                               fontSize: 27,
-//                               color: Colors.white),
-//                         ),
-//                       ),
-//                       decoration: BoxDecoration(
-//                         borderRadius: BorderRadius.circular(10),
-//                         color: AppColors.dashboardYellow,
-//                       ),
-//                     ),
-//                     title: Text(
-//                       tips[index].title,
-//                       style: GoogleFonts.poppins(textStyle: headerboldblue2),
-//                     ),
-//                     subtitle: Text(
-//                       maxLines: 2,
-//                       tips[index].discription,
-//                       style: GoogleFonts.poppins(
-//                           fontSize: 12,
-//                           fontWeight: FontWeight.w200,
-//                           textStyle: TextStyle()),
-//                     ),
-//                   )
