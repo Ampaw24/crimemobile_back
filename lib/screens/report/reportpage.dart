@@ -83,7 +83,6 @@ class _ReportPageState extends State<ReportPage> {
             ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 35),
-
               child: StreamBuilder(
                   stream: _reportCollection.onValue,
                   builder: (context, snapShot) {
@@ -123,29 +122,22 @@ class _ReportPageState extends State<ReportPage> {
                                   ),
                                 ),
                                 onTap: () {
-                                  Get.bottomSheet(
-                                    Container(
-                                    color: Colors.red,
-                                    height: 400,
-
-                                  ));
-                                  // Navigator.push(
-                                  //     context,
-                                  //     MaterialPageRoute(
-                                  //         builder: (context) => ViewReport(
-                                  //               discription: _reportItems[index]
-                                  //                   ['description'],
-                                  //               crimelocation:
-                                  //                   _reportItems[index]
-                                  //                       ['location'],
-                                  //               medicalassistance:
-                                  //                   _reportItems[index]
-                                  //                       ['medical'],
-                                  //               username: _reportItems[index]
-                                  //                   ['username'],
-                                  //             ))
-
-                                  //             );
+                               
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ViewReport(
+                                                discription: _reportItems[index]
+                                                    ['description'],
+                                                crimelocation:
+                                                    _reportItems[index]
+                                                        ['location'],
+                                                medicalassistance:
+                                                    _reportItems[index]
+                                                        ['medical'],
+                                                username: _reportItems[index]
+                                                    ['username'],
+                                              )));
                                 },
                                 leading: Material(
                                   borderRadius: BorderRadius.circular(25),
