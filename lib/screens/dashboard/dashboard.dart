@@ -147,8 +147,8 @@ class _DashboardState extends State<Dashboard> {
                 child: Text(
                   "Hello, ${_userName.toString()}",
                   style: GoogleFonts.montserrat(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
                       color: AppColors.btnBlue),
                 ),
               ),

@@ -41,6 +41,8 @@ class _ManageNewsState extends State<ManageNews> {
   String? newsDescription;
 
   final _newsCollection = FirebaseDatabase.instance.ref('News');
+  String imageUrl = '';
+  UploadTask? uploadTask;
 
   Future<void> _pickFile() async {
     try {
@@ -64,9 +66,39 @@ class _ManageNewsState extends State<ManageNews> {
     } catch (e) {}
   }
 
+  late String imgUrl;
+
+  Future uploadFile() async {
+    final path = 'news/${pickedFile!.name}';
+    final file = File(pickedFile!.path!);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    ref.putFile(file);
+    setState(() {
+      uploadTask = ref.putFile(file);
+    });
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+    imgUrl = urlDownload;
+    print(imgUrl);
+  }
+
   deleteMessage(key) {
     _newsCollection.child(key).remove();
   }
+
+  Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+      stream: uploadTask?.snapshotEvents,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.data!;
+          double progress = data.bytesTransferred / data.totalBytes;
+        }
+        return SizedBox(
+          height: 50,
+        );
+      });
 
   DatabaseReference? dbRef;
 
@@ -129,6 +161,20 @@ class _ManageNewsState extends State<ManageNews> {
                         itemCount: _newsItems.length,
                         itemBuilder: (context, index) {
                           return ListTile(
+                            leading: Container(
+                              height: 100,
+                              width: 70,
+                              decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.network(
+                                  _newsItems[index]['imageurl'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
                             trailing: GestureDetector(
                               onTap: () async {
                                 await deleteMessage(_newsItems[index]['key']);
@@ -180,7 +226,7 @@ class _ManageNewsState extends State<ManageNews> {
                           SafeArea(
                             child: Container(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.60,
+                              height: MediaQuery.of(context).size.height * 0.80,
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
@@ -233,14 +279,11 @@ class _ManageNewsState extends State<ManageNews> {
                                             // Add widgets for file upload here
                                             // You can use a package like file_picker to handle file uploads
                                             SizedBox(height: 16),
-                                            Container(
-                                              height: 30,
-                                              width: 300,
-                                              child: Center(
-                                                child:
-                                                    Text(filename.toString()),
-                                              ),
-                                            ),
+                                            if (pickedFile != null)
+                                              Expanded(
+                                                  child:
+                                                      Text(pickedFile!.name)),
+
                                             GestureDetector(
                                               onTap: _pickFile,
                                               child: Container(
@@ -284,15 +327,17 @@ class _ManageNewsState extends State<ManageNews> {
                                                             10)),
                                               ),
                                             ),
-
+                                            buildProgress(),
                                             GestureDetector(
-                                              onTap: () {
+                                              onTap: () async {
+                                                await uploadFile();
                                                 Map<String, String> news = {
                                                   'title':
                                                       newsTitleController.text,
                                                   'description':
                                                       newsDescriptionController
                                                           .text,
+                                                  'imageurl': imgUrl
                                                 };
                                                 // final selctedFile = storageRef
                                                 //     .child(pickedFile.toString());
