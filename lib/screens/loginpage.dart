@@ -7,10 +7,11 @@ import 'package:crimeappbackend/screens/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../config/firebase/firebaseAuth.dart';
-
+import 'package:get/get.dart';
 import '../widget/appbtn.dart';
 import 'forgotpassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,6 +33,57 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _obsecureText = !_obsecureText;
     });
+  }
+
+  bool isErr = false;
+
+  void _signInwithMail() async {
+    FocusScopeNode currentFocus = FocusScope.of(context);
+
+    if (!currentFocus.hasPrimaryFocus) {
+      currentFocus.unfocus();
+    }
+
+    setState(() {
+      _isloading = true;
+    });
+    try {
+      final user = await _auth.signInWithEmailAndPassword(
+          email: _staffIdController.text, password: _passwordController.text);
+      if (user != null) {
+        Future.delayed(
+            Duration(
+              seconds: 20,
+            ),
+            () => Get.to(Dashboard(
+                  userName: _staffIdController.text,
+                )));
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        setState(() {
+          _isloading = false;
+          isErr = true;
+          _staffIdController.text = "";
+        });
+      } else if (e.code == "account-exists-with-different-credential") {
+        setState(() {
+          _isloading = false;
+        });
+      } else if (e.code == 'invalid-email') {
+        setState(() {
+          _isloading = false;
+        });
+      } else {
+        setState(() {
+          _isloading = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _isloading = false;
+      });
+    }
   }
 
   @override
@@ -82,8 +134,14 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          _isloading
+                              ? SpinKitDoubleBounce(
+                                  size: 30,
+                                  color: Color(0xffDEA81D),
+                                )
+                              : Container(),
                           Text(
-                            "Admin Id",
+                            "Admin Mail",
                             style: GoogleFonts.roboto(
                                 fontSize: 15, fontWeight: FontWeight.w300),
                           ),
@@ -155,43 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                             height: 10,
                           ),
                           CustomBtn(
-                            btnClick: () async {
-                              try {
-                                setState(() {
-                                  _isloading = true; // Start showing the loader
-                                });
-
-                                final user =
-                                    await _auth.signInWithEmailAndPassword(
-                                        email: _staffIdController.text,
-                                        password: _passwordController.text);
-                                        
-                                if (_isLoading)
-                                  Center(
-                                    child: SizedBox(
-                                      height: 100,
-                                      width: 100,
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  );
-
-                                if (user != null) {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Dashboard(
-                                                userName:
-                                                    _staffIdController.text,
-                                              )));
-                                }
-                                setState(() {
-                                  _isloading =
-                                      false; // Start showing the loader
-                                });
-                              } catch (e) {
-                                print(e);
-                              }
-                            },
+                            btnClick: _signInwithMail,
                             btnText: "Login",
                           )
                         ],
