@@ -47,23 +47,14 @@ class _ReportPageState extends State<ReportPage> {
               Text(
                 "Manage Reports",
                 style: GoogleFonts.montserrat(
-                    fontSize: 19,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
                     color: AppColors.btnBlue),
               ),
               const SizedBox(
-                width: 50,
+                width: 90,
               ),
-              Container(
-                margin: const EdgeInsets.only(right: 20),
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/profile.jpg"),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(20)),
-              )
+          
             ],
             leading: GestureDetector(
                 onTap: () => Navigator.pop(context),
@@ -122,7 +113,6 @@ class _ReportPageState extends State<ReportPage> {
                                   ),
                                 ),
                                 onTap: () {
-                               
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

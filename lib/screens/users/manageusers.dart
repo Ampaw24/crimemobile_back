@@ -18,32 +18,14 @@ class ManageUsers extends StatefulWidget {
 }
 
 class _ManageUsersState extends State<ManageUsers> {
+  final _usersCollections = FirebaseDatabase.instance.ref('Users');
 
- final _usersCollections = FirebaseDatabase.instance.ref('Users');
-
-  List<UserModule> user = [
-    UserModule(
-        currentLevel: "L 200",
-        department: "Computer Science",
-        hostelStatus: false,
-        profile_url: "assets/profile.jpg",
-        userId: "01203769D",
-        userName: "Ampaw Juriels"),
-    UserModule(
-        currentLevel: "L 200",
-        department: "Computer Science",
-        hostelStatus: false,
-        profile_url: "assets/profile.jpg",
-        userId: "01203769D",
-        userName: "Ampaw Juriels"),
-  ];
-
-   DatabaseReference? dbRef;
+  DatabaseReference? dbRef;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-  dbRef = FirebaseDatabase.instance.ref().child('Users');
+    dbRef = FirebaseDatabase.instance.ref().child('Users');
   }
 
   @override
@@ -52,28 +34,14 @@ class _ManageUsersState extends State<ManageUsers> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
           child: AppBar(
-            actions: [
-              Text(
-                "Manage Users",
-                style: GoogleFonts.montserrat(
-                    fontSize: 23,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.btnBlue),
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Container(
-                margin: const EdgeInsets.only(right: 20),
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/profile.jpg"),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(20)),
-              )
-            ],
+            title: Text(
+              "Users",
+              style: GoogleFonts.montserrat(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.btnBlue),
+            ),
+            centerTitle: true,
             leading: GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: Icon(Icons.arrow_back)),
@@ -81,136 +49,138 @@ class _ManageUsersState extends State<ManageUsers> {
           ),
           preferredSize: const Size.fromHeight(60)),
       body: SingleChildScrollView(
-        child: Expanded(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              "   Users ${user.length.toString()}",
-              style: GoogleFonts.roboto(textStyle: headerboldblue1),
-            ),
-            ListView.builder(
-                itemCount: user.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => ListTile(
-                      trailing: GestureDetector(
-                        child: GestureDetector(
-                          onTap: () => showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: Center(
-                                        child: Text(
-                                      'Details',
-                                      style: GoogleFonts.poppins(),
-                                    )),
-                                    content: Padding(
-                                      padding: EdgeInsets.all(10.0),
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          // Rounded user image
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                                45.0), // Make it a circle
-                                            child: Image.asset(
-                                              user[index].profile_url,
-                                              width: 90.0,
-                                              height: 90.0,
-                                              fit: BoxFit.cover,
+        physics: BouncingScrollPhysics(),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "   Users",
+            style: GoogleFonts.roboto(textStyle: headerboldblue1),
+          ),
+          StreamBuilder(
+              stream: _usersCollections.onValue,
+              builder: (context, snapShot) {
+                if (snapShot.hasData &&
+                    !snapShot.hasError &&
+                    snapShot.data?.snapshot.value != null) {
+                  Map _newsCollections = snapShot.data?.snapshot.value as Map;
+                  List _userItems = [];
+                  _newsCollections.forEach(
+                      (index, data) => _userItems.add({"key": index, ...data}));
+                  return ListView.builder(
+                      itemCount: _userItems.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => ListTile(
+                            trailing: GestureDetector(
+                              child: GestureDetector(
+                                onTap: () => showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          title: Center(
+                                              child: Text(
+                                            'Details',
+                                            style: GoogleFonts.poppins(),
+                                          )),
+                                          content: Padding(
+                                            padding: EdgeInsets.all(10.0),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                // Rounded user image
+                                                // ClipRRect(
+                                                //   borderRadius:
+                                                //       BorderRadius.circular(
+                                                //           45.0), // Make it a circle
+                                                //   child: Image.asset(
+                                                //     user[index].profile_url,
+                                                //     width: 90.0,
+                                                //     height: 90.0,
+                                                //     fit: BoxFit.cover,
+                                                //   ),
+                                                // ),
+                                                SizedBox(height: 12.0),
+                                                // User details
+                                                Text(
+                                                  _userItems[index]['name'],
+                                                  style: TextStyle(
+                                                    color: AppColors.btnBlue,
+                                                    fontSize: 24.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "User Id: ${_userItems[index]['name']}",
+                                                    style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  child: Text(
+                                                    " ${_userItems[index]['name']}",
+                                                    style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "Level: ${_userItems[index]['name']}",
+                                                    style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          SizedBox(height: 12.0),
-                                          // User details
-                                          Text(
-                                            user[index].userName,
-                                            style: TextStyle(
-                                              color: AppColors.btnBlue,
-                                              fontSize: 24.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10),
-                                            child: Text(
-                                              "User Id: ${user[index].userId}",
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            child: Text(
-                                              " ${user[index].department}",
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10),
-                                            child: Text(
-                                              "Level: ${user[index].currentLevel}",
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                      
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10),
-                                            child: Text(
-                                              "Hosteler :  ${user[index].hostelStatus ? "Yes" : "No"}",
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.grey,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )),
-                          child: Icon(
-                            FontAwesomeIcons.circleInfo,
-                            size: 22,
-                            color: AppColors.btnBlue,
-                            weight: 3,
-                          ),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 20, horizontal: 20),
-                      leading: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                            image: DecorationImage(
-                                image: AssetImage(
-                                  user[index].profile_url,
+                                        )),
+                                child: Icon(
+                                  FontAwesomeIcons.circleInfo,
+                                  size: 22,
+                                  color: AppColors.btnBlue,
+                                  weight: 3,
                                 ),
-                                fit: BoxFit.cover),
-                            borderRadius: BorderRadius.circular(25)),
-                      ),
-                      title: Text(
-                        user[index].userName,
-                        style: GoogleFonts.poppins(textStyle: headerboldblue2),
-                      ),
-                      subtitle: Text(
-                        maxLines: 2,
-                        " ${user[index].department} \n ${user[index].userId} - ${user[index].currentLevel}",
-                        style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w200,
-                            textStyle: TextStyle()),
-                      ),
-                    )),
-          ]),
-        ),
+                              ),
+                            ),
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            leading: Container(
+                              height: 50,
+                              width: 50,
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage('assets/profile.jpg'),
+                                      fit: BoxFit.cover),
+                                  borderRadius: BorderRadius.circular(25)),
+                            ),
+                            title: Text(
+                              _userItems[index]['name'],
+                              style: GoogleFonts.poppins(
+                                  textStyle: headerboldblue2),
+                            ),
+                            subtitle: Text(
+                              maxLines: 2,
+                              " ${_userItems[index]['email']} \n ${_userItems[index]['studentId']}",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  textStyle: TextStyle()),
+                            ),
+                          ));
+                }
+                return Container();
+              }),
+        ]),
       ),
     );
   }

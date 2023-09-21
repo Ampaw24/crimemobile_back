@@ -16,8 +16,8 @@ const dashboardCardcount = TextStyle(
     color: Color(0xfff9fcff), fontWeight: FontWeight.w700, fontSize: 22);
 const headerboldblue1 = TextStyle(
     color: Color.fromARGB(211, 14, 14, 33),
-    fontSize: 22,
-    fontWeight: FontWeight.w500);
+    fontSize: 20,
+    fontWeight: FontWeight.w400);
 const headerboldblue2 = TextStyle(
     color: Color.fromARGB(211, 14, 14, 33),
     fontSize: 15,
@@ -30,8 +30,8 @@ TextStyle subheaderBold = TextStyle(
     color: AppColors.mainBlue, fontSize: 18, fontWeight: FontWeight.bold);
 TextStyle subheaderRegular =
     TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.normal);
-TextStyle subheaderBoldbtn =
-    TextStyle(color: AppColors.mainBlue, fontSize: 15, fontWeight: FontWeight.w600);
+TextStyle subheaderBoldbtn = TextStyle(
+    color: AppColors.mainBlue, fontSize: 15, fontWeight: FontWeight.w600);
 TextStyle header1boldwhite =
     TextStyle(color: Colors.white, fontSize: 39, fontWeight: FontWeight.normal);
 TextStyle subheaderBoldWhite =
@@ -39,5 +39,5 @@ TextStyle subheaderBoldWhite =
 TextStyle subheaderBoldbtn2 =
     TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600);
 
-    TextStyle subheaderBoldbtnwhite =
+TextStyle subheaderBoldbtnwhite =
     TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600);

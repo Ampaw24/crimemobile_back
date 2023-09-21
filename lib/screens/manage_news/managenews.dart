@@ -122,18 +122,8 @@ class _ManageNewsState extends State<ManageNews> {
                     color: AppColors.btnBlue),
               ),
               const SizedBox(
-                width: 50,
+                width: 96,
               ),
-              Container(
-                margin: const EdgeInsets.only(right: 20),
-                height: 35,
-                width: 35,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/profile.jpg"),
-                        fit: BoxFit.cover),
-                    borderRadius: BorderRadius.circular(20)),
-              )
             ],
             leading: GestureDetector(
                 onTap: () => Navigator.pop(context),
@@ -143,24 +133,26 @@ class _ManageNewsState extends State<ManageNews> {
           preferredSize: const Size.fromHeight(60)),
       body: SafeArea(
         child: Scrollbar(
-          child: Expanded(
-              child: StreamBuilder(
-                  stream: _newsCollection.onValue,
-                  builder: (context, snapShot) {
-                    if (snapShot.hasData &&
-                        !snapShot.hasError &&
-                        snapShot.data?.snapshot.value != null) {
-                      Map _newsCollections =
-                          snapShot.data?.snapshot.value as Map;
-                      List _newsItems = [];
-                      _newsCollections.forEach((index, data) =>
-                          _newsItems.add({"key": index, ...data}));
+          child: StreamBuilder(
+              stream: _newsCollection.onValue,
+              builder: (context, snapShot) {
+                if (snapShot.hasData &&
+                    !snapShot.hasError &&
+                    snapShot.data?.snapshot.value != null) {
+                  Map _newsCollections = snapShot.data?.snapshot.value as Map;
+                  List _newsItems = [];
+                  _newsCollections.forEach(
+                      (index, data) => _newsItems.add({"key": index, ...data}));
 
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: _newsItems.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: _newsItems.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: ListTile(
                             leading: Container(
                               height: 100,
                               width: 70,
@@ -205,12 +197,14 @@ class _ManageNewsState extends State<ManageNews> {
                                     fontSize: 12,
                                     fontWeight: FontWeight.w200,
                                     textStyle: TextStyle())),
-                          );
-                        },
-                      );
-                    }
-                    return Container();
-                  })),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+                return Container();
+              }),
         ),
       ),
       floatingActionButton: FloatingActionButton(

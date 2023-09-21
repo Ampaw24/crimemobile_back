@@ -31,32 +31,32 @@ List<DashboardCard> cardcontent = [
       navigate: ReportPage(),
       title: "Reports",
       cardIcon: FontAwesomeIcons.fileText,
-      cardColor: AppColors.dashboardGreen),
+      cardColor: AppColors.dashboardGreen,
+      islong: false),
   DashboardCard(
       navigate: ManageNews(),
       title: "Manage\nNews",
       cardIcon: FontAwesomeIcons.solidNewspaper,
-      cardColor: AppColors.dashboardYellow),
+      cardColor: AppColors.dashboardYellow,
+      islong: false),
   DashboardCard(
       navigate: ManageTips(),
       title: "Manage\nTips",
       cardIcon: FontAwesomeIcons.lightbulb,
-      cardColor: AppColors.dashboardRed),
+      cardColor: AppColors.dashboardRed,
+      islong: false),
   DashboardCard(
       navigate: ManageUsers(),
       title: "Users",
       cardIcon: FontAwesomeIcons.users,
-      cardColor: AppColors.dashboardBrown),
-  DashboardCard(
-      navigate: FeedsPage(),
-      title: "Feeds",
-      cardIcon: FontAwesomeIcons.videoCamera,
-      cardColor: AppColors.btnBlue),
+      cardColor: AppColors.dashboardBrown,
+      islong: false),
   DashboardCard(
       navigate: ProfilePage(),
       title: "Profile",
       cardIcon: FontAwesomeIcons.user,
-      cardColor: Colors.blue)
+      cardColor: Colors.blue,
+      islong: true)
 ];
 
 class _DashboardState extends State<Dashboard> {
@@ -139,13 +139,14 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
           child: AppBar(
+            leading: Container(),
             actions: [
               Container(
                 margin: const EdgeInsets.only(
                   right: 80,
                 ),
                 child: Text(
-                  "Hello, ${_userName.toString()}",
+                  " Hello, ${_userName.toString()}",
                   style: GoogleFonts.montserrat(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
@@ -224,8 +225,8 @@ class _DashboardState extends State<Dashboard> {
                   navigatePage: cardcontent[index].navigate,
                   cardColor: cardcontent[index].cardColor,
                   cardIcon: cardcontent[index].cardIcon,
-                  counter: cardcontent[index].counter,
                   title: cardcontent[index].title,
+                  isTile: cardcontent[index].islong,
                 ));
               },
             ),
