@@ -12,6 +12,7 @@ import '../widget/appbtn.dart';
 import 'forgotpassword.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -39,42 +40,42 @@ class _LoginPageState extends State<LoginPage> {
 
   void _signInwithMail() async {
     FocusScopeNode currentFocus = FocusScope.of(context);
-
     if (!currentFocus.hasPrimaryFocus) {
       currentFocus.unfocus();
     }
-
     setState(() {
       _isloading = true;
     });
+
     try {
       final user = await _auth.signInWithEmailAndPassword(
           email: _staffIdController.text, password: _passwordController.text);
+      if (user == null || _staffIdController.text == " " || _passwordController.text == "") {
+        setState(() {
+          _isLoading = false;
+        });
+        Get.snackbar("No User Found",
+            "No entries made for login Add right credentials!!",
+            isDismissible: true, snackPosition: SnackPosition.BOTTOM);
+      }
       if (user != null) {
         Future.delayed(
             Duration(
-              seconds: 20,
+              seconds: 10,
             ),
-            () => Get.to(Dashboard(
+            () => Get.to(() => Dashboard(
                   userName: _staffIdController.text,
                 )));
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+      if (e.code == 'user-not-found' ||
+          e.code == "account-exists-with-different-credential" || e.code == "The-password-is-invalid") {
         setState(() {
           _isloading = false;
-          isErr = true;
           _staffIdController.text = "";
-        });
-      } else if (e.code == "account-exists-with-different-credential") {
-        setState(() {
-          _isloading = false;
+          
         });
       } else if (e.code == 'invalid-email') {
-        setState(() {
-          _isloading = false;
-        });
-      } else {
         setState(() {
           _isloading = false;
         });

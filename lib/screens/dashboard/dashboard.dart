@@ -76,14 +76,11 @@ class _DashboardState extends State<Dashboard> {
     DatabaseReference reference =
         FirebaseDatabase.instance.ref().child("Admindetails");
     reference.onValue.listen((DatabaseEvent snapshot) {
-      print("${snapshot.snapshot.value}");
-
       if (snapshot.snapshot.value != null) {
         Map<dynamic, dynamic>? usersData = snapshot.snapshot.value as Map?;
         usersData?.forEach((key, value) {
           if (value["mail"] == email) {
             _userName = value["name"];
-            print(_userName);
           }
         });
       }
@@ -172,7 +169,7 @@ class _DashboardState extends State<Dashboard> {
                         width: 30,
                         decoration: BoxDecoration(
                             image: DecorationImage(
-                                image: AssetImage("assets/profile.jpg"),
+                                image: AssetImage("assets/user.png"),
                                 fit: BoxFit.cover),
                             borderRadius: BorderRadius.circular(20)),
                       ),
@@ -193,7 +190,6 @@ class _DashboardState extends State<Dashboard> {
                 ),
               )
             ],
-            // leading: Icon(Icons.menu_outlined),
             backgroundColor: Colors.white,
           ),
           preferredSize: const Size.fromHeight(60)),
@@ -211,7 +207,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, // Number of columns in the grid
                 mainAxisSpacing: 10.0, // Spacing between rows
@@ -231,7 +227,6 @@ class _DashboardState extends State<Dashboard> {
               },
             ),
           ),
-          if (isLoading) Center(child: CircularProgressIndicator())
         ],
       ),
     );

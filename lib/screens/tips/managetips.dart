@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors.dart';
 import '../../core/text.dart';
@@ -46,6 +47,102 @@ class _ManageTipsState extends State<ManageTips> {
   void initState() {
     super.initState();
     dbRef = FirebaseDatabase.instance.ref().child('Tips');
+  }
+
+  void openButtomSheet() {
+    Get.bottomSheet(
+        backgroundColor: Colors.white,
+        elevation: 5,
+        isScrollControlled: true,
+        SingleChildScrollView(
+            child: Wrap(children: [
+          SafeArea(
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.70,
+                  child: SingleChildScrollView(
+                      child: Column(children: [
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Text(
+                      "Add Tip",
+                      style: GoogleFonts.lato(
+                        textStyle: headerboldblue1,
+                      ),
+                    ),
+                    SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Tip Title',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextFormField(
+                              controller: newsTitleController,
+                              decoration: InputDecoration(
+                                hintText: 'Enter title',
+                              ),
+                            ),
+                            SizedBox(height: 20),
+                            Text(
+                              'Tip Detail',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextFormField(
+                              controller: newsDescriptionController,
+                              maxLines: 2,
+                              decoration: InputDecoration(
+                                hintText: 'Enter description',
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: () {
+                                Map<String, String> tips = {
+                                  'title': newsTitleController.text,
+                                  'description': newsDescriptionController.text,
+                                };
+
+                                dbRef?.push().set(tips).then((_) {
+                                  newsTitleController.text = "";
+                                  newsDescriptionController.text = "";
+                                }).catchError((_) {});
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                ),
+                                margin: const EdgeInsets.only(top: 20),
+                                child: Center(
+                                  child: Text(
+                                    "Create Tip",
+                                    style: GoogleFonts.montserrat(
+                                        textStyle: subheaderBoldbtnwhite),
+                                  ),
+                                ),
+                                height: 50,
+                                width: 300,
+                                decoration: BoxDecoration(
+                                    color: AppColors.mainBlue,
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ]))))
+        ])));
   }
 
   @override
@@ -131,123 +228,7 @@ class _ManageTipsState extends State<ManageTips> {
         floatingActionButton: FloatingActionButton(
             backgroundColor: AppColors.btnBlue,
             onPressed: () {
-              setState(() {
-                showModalBottomSheet(
-                    isScrollControlled: true,
-                    enableDrag: true,
-                    context: context,
-                    builder: (context) => SingleChildScrollView(
-                          child: Wrap(children: [
-                            SafeArea(
-                              child: Container(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.70,
-                                child: SingleChildScrollView(
-                                  child: Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                      Text(
-                                        "Add Tip",
-                                        style: GoogleFonts.lato(
-                                          textStyle: headerboldblue1,
-                                        ),
-                                      ),
-                                      SingleChildScrollView(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                'Tip Title',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                controller: newsTitleController,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Enter title',
-                                                ),
-                                              ),
-                                              SizedBox(height: 20),
-                                              Text(
-                                                'Tip Detail',
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                controller:
-                                                    newsDescriptionController,
-                                                maxLines: 2,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Enter description',
-                                                ),
-                                              ),
-                                              SizedBox(height: 10),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  Map<String, String> tips = {
-                                                    'title': newsTitleController
-                                                        .text,
-                                                    'description':
-                                                        newsDescriptionController
-                                                            .text,
-                                                  };
-
-                                                  dbRef
-                                                      ?.push()
-                                                      .set(tips)
-                                                      .then((_) {
-                                                    newsTitleController.text =
-                                                        "";
-                                                    newsDescriptionController
-                                                        .text = "";
-                                                  }).catchError((_) {});
-                                                },
-                                                child: Container(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 10,
-                                                  ),
-                                                  margin: const EdgeInsets.only(
-                                                      top: 20),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "Create Tip",
-                                                      style: GoogleFonts.montserrat(
-                                                          textStyle:
-                                                              subheaderBoldbtnwhite),
-                                                    ),
-                                                  ),
-                                                  height: 50,
-                                                  width: 300,
-                                                  decoration: BoxDecoration(
-                                                      color: AppColors.mainBlue,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ]),
-                        ));
-              });
+              openButtomSheet();
             },
             child: Icon(
               FontAwesomeIcons.add,

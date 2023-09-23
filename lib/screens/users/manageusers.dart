@@ -71,110 +71,131 @@ class _ManageUsersState extends State<ManageUsers> {
                   return ListView.builder(
                       itemCount: _userItems.length,
                       shrinkWrap: true,
-                      itemBuilder: (context, index) => ListTile(
-                            trailing: GestureDetector(
-                              child: GestureDetector(
-                                onTap: () => showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          title: Center(
-                                              child: Text(
-                                            'Details',
-                                            style: GoogleFonts.poppins(),
-                                          )),
-                                          content: Padding(
-                                            padding: EdgeInsets.all(10.0),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                // Rounded user image
-                                                // ClipRRect(
-                                                //   borderRadius:
-                                                //       BorderRadius.circular(
-                                                //           45.0), // Make it a circle
-                                                //   child: Image.asset(
-                                                //     user[index].profile_url,
-                                                //     width: 90.0,
-                                                //     height: 90.0,
-                                                //     fit: BoxFit.cover,
-                                                //   ),
-                                                // ),
-                                                SizedBox(height: 12.0),
-                                                // User details
-                                                Text(
-                                                  _userItems[index]['name'],
-                                                  style: TextStyle(
-                                                    color: AppColors.btnBlue,
-                                                    fontSize: 24.0,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 10),
+                      itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            child: Card(
+                              elevation: 5,
+                              color: Colors.white,
+                              child: ListTile(
+                                trailing: GestureDetector(
+                                  child: GestureDetector(
+                                    onTap: () => showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              backgroundColor: Colors.white,
+                                              title: Center(
                                                   child: Text(
-                                                    "User Id: ${_userItems[index]['name']}",
-                                                    style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      color: Colors.grey,
-                                                    ),
-                                                  ),
+                                                'Details',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 14,
                                                 ),
-                                                Container(
-                                                  child: Text(
-                                                    " ${_userItems[index]['name']}",
-                                                    style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      color: Colors.grey,
+                                              )),
+                                              content: Padding(
+                                                padding: EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: <Widget>[
+                                                    ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              35),
+                                                      child: Container(
+                                                        height: 70,
+                                                        width: 70,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          image: DecorationImage(
+                                                              image: AssetImage(
+                                                                  'assets/user.png'),
+                                                              fit: BoxFit.fill),
+                                                          color: Colors.blue,
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 10),
-                                                  child: Text(
-                                                    "Level: ${_userItems[index]['name']}",
-                                                    style: TextStyle(
-                                                      fontSize: 16.0,
-                                                      color: Colors.grey,
+                                                    SizedBox(height: 12.0),
+                                                    // User details
+                                                    Text(
+                                                      _userItems[index]['name'],
+                                                      style: TextStyle(
+                                                        color:
+                                                            AppColors.btnBlue,
+                                                        fontSize: 24.0,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
                                                     ),
-                                                  ),
+                                                    Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              right: 10),
+                                                      child: Text(
+                                                        "User Id: ${_userItems[index]['studentId']}",
+                                                        style: TextStyle(
+                                                          fontSize: 16.0,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        " ${_userItems[index]['email']}",
+                                                        style: TextStyle(
+                                                          fontSize: 16.0,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    // Container(
+                                                    //   margin:
+                                                    //       const EdgeInsets.only(
+                                                    //           right: 10),
+                                                    //   child: Text(
+                                                    //     "Level: ${_userItems[index]['name']}",
+                                                    //     style: TextStyle(
+                                                    //       fontSize: 16.0,
+                                                    //       color: Colors.grey,
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ),
-                                        )),
-                                child: Icon(
-                                  FontAwesomeIcons.circleInfo,
-                                  size: 22,
-                                  color: AppColors.btnBlue,
-                                  weight: 3,
+                                              ),
+                                            )),
+                                    child: Icon(
+                                      FontAwesomeIcons.circleInfo,
+                                      size: 22,
+                                      color: AppColors.btnBlue,
+                                      weight: 3,
+                                    ),
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 20, horizontal: 20),
+                                leading: Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage('assets/user.png'),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(25)),
+                                ),
+                                title: Text(
+                                  _userItems[index]['name'],
+                                  style: GoogleFonts.poppins(
+                                      textStyle: headerboldblue2),
+                                ),
+                                subtitle: Text(
+                                  maxLines: 2,
+                                  " ${_userItems[index]['email']} \n ${_userItems[index]['studentId']}",
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w300,
+                                      textStyle: TextStyle()),
                                 ),
                               ),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 20, horizontal: 20),
-                            leading: Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image: AssetImage('assets/profile.jpg'),
-                                      fit: BoxFit.cover),
-                                  borderRadius: BorderRadius.circular(25)),
-                            ),
-                            title: Text(
-                              _userItems[index]['name'],
-                              style: GoogleFonts.poppins(
-                                  textStyle: headerboldblue2),
-                            ),
-                            subtitle: Text(
-                              maxLines: 2,
-                              " ${_userItems[index]['email']} \n ${_userItems[index]['studentId']}",
-                              style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300,
-                                  textStyle: TextStyle()),
                             ),
                           ));
                 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 const fansyTitle = TextStyle(
-    fontSize: 45, color: Color(0xffDEA81D), fontWeight: FontWeight.w300);
+    fontSize: 40, color: Color(0xffDEA81D), fontWeight: FontWeight.w300);
 const usertext = TextStyle(
     fontSize: 18, color: AppColors.lightBlack, fontWeight: FontWeight.w400);
 const logintxtblack = TextStyle(color: Colors.black, fontSize: 25);
