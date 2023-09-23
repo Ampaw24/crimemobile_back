@@ -116,6 +116,12 @@ class _ManageTipsState extends State<ManageTips> {
                                 dbRef?.push().set(tips).then((_) {
                                   newsTitleController.text = "";
                                   newsDescriptionController.text = "";
+                                  Get.showSnackbar(GetSnackBar(
+                                    duration: Duration(seconds: 5),
+                                    title: "Tip Added",
+                                    message:
+                                        "Tip ${newsTitleController.text} sent to users",
+                                  ));
                                 }).catchError((_) {});
                               },
                               child: Container(

@@ -147,18 +147,7 @@ class _ManageUsersState extends State<ManageUsers> {
                                                         ),
                                                       ),
                                                     ),
-                                                    // Container(
-                                                    //   margin:
-                                                    //       const EdgeInsets.only(
-                                                    //           right: 10),
-                                                    //   child: Text(
-                                                    //     "Level: ${_userItems[index]['name']}",
-                                                    //     style: TextStyle(
-                                                    //       fontSize: 16.0,
-                                                    //       color: Colors.grey,
-                                                    //     ),
-                                                    //   ),
-                                                    // ),
+                                                
                                                   ],
                                                 ),
                                               ),

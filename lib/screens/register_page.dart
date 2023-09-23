@@ -5,12 +5,13 @@ import 'package:crimeappbackend/screens/loginpage.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../Specs/colors.dart';
 import '../../../Specs/password_field.dart';
 import '../../../Specs/text_field.dart';
 import '../config/firebase/firebaseAuth.dart';
-
+import '../core/text.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -50,10 +51,31 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 100),
+                  Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: AssetImage("assets/logo.png"),
+                              fit: BoxFit.cover)),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Crime Reporter",
+                        style: GoogleFonts.justAnotherHand(
+                          textStyle: fansyTitle,
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
-                    "Register",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    "Register Admin",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                   SizedBox(
                     height: 20,
@@ -83,7 +105,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     child: textFormField(
                         controller: _studentIdController,
-                        hintText: "Staff Mail",
+                        hintText: "Staff Username",
                         borderWidth: 2,
                         borderRadius: 10,
                         validateMsg: "Field required",
@@ -130,7 +152,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       Map<String, String> admindetails = {
                         'name': _nameController.text,
                         'mail':
-                            "${_studentIdController.text.trim()}@crsatu.com",
+                            "${_studentIdController.text.trim().toLowerCase()}@crsatu.com",
                       };
 
                       if (!_formKey.currentState!.validate()) {
@@ -139,7 +161,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                       if (_passwordController.text !=
                           _confirmPasswordController.text) {
-                        print("Password not match");
+                        Get.showSnackbar(GetSnackBar(
+                          title: "Password Error",
+                          message: "Password match error!!",
+                        ));
                         return;
                       }
 
@@ -149,30 +174,27 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
                       String result = await _fireAuth.signUp(
                         email: "${_studentIdController.text.trim()}@crsatu.com",
-                        studentId: _studentIdController.text,
-                        name: _nameController.text,
                         password: _passwordController.text,
                       );
-                      ref
-                          .push()
-                          .set(admindetails)
-                          .then((_) => print('Admin Added'))
-                          .catchError((e) => print(e));
+                      ref.push().set(admindetails).then((_) {
+                        Get.snackbar("Admin Added!",
+                            "Administrator details added Successfully",
+                            snackPosition: SnackPosition.TOP);
+                        setState(() {
+                          _isLoading = false;
+                        });
+                        _studentIdController.text = " ";
+                        _confirmPasswordController.text = " ";
+                        _passwordController.text = " ";
+                        _nameController.text = "";
 
-                      setState(() {
-                        _isLoading = false;
-                      });
-                      if (result == "success") {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => LoginPage(),
                           ),
                         );
-
-                      } else {
-                        print("$result");
-                      }
+                      }).catchError((e) => print(e));
                     },
                     child: Container(
                       width: 280,

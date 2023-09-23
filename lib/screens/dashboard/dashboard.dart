@@ -51,12 +51,6 @@ List<DashboardCard> cardcontent = [
       cardIcon: FontAwesomeIcons.users,
       cardColor: AppColors.dashboardBrown,
       islong: false),
-  DashboardCard(
-      navigate: ProfilePage(),
-      title: "Profile",
-      cardIcon: FontAwesomeIcons.user,
-      cardColor: Colors.blue,
-      islong: true)
 ];
 
 class _DashboardState extends State<Dashboard> {
@@ -81,6 +75,7 @@ class _DashboardState extends State<Dashboard> {
         usersData?.forEach((key, value) {
           if (value["mail"] == email) {
             _userName = value["name"];
+            print(_userName);
           }
         });
       }
@@ -139,17 +134,21 @@ class _DashboardState extends State<Dashboard> {
             leading: Container(),
             actions: [
               Container(
-                margin: const EdgeInsets.only(
-                  right: 80,
-                ),
-                child: Text(
-                  " Hello, ${_userName.toString()}",
-                  style: GoogleFonts.montserrat(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.btnBlue),
-                ),
-              ),
+                  margin: const EdgeInsets.only(
+                    right: 40,
+                  ),
+                  child: RichText(
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      maxLines: 1,
+                      textScaleFactor: 1,
+                      text: TextSpan(
+                        text: " Hello, ${_userName.toString()}",
+                        style: GoogleFonts.montserrat(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                            color: AppColors.btnBlue),
+                      ))),
               GestureDetector(
                 onTap: () => _showMyDialog(),
                 child: Stack(
@@ -197,7 +196,7 @@ class _DashboardState extends State<Dashboard> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            margin: const EdgeInsets.only(left: 15),
+            margin: const EdgeInsets.only(left: 23),
             child: Text(
               "Dashboard",
               style: GoogleFonts.montserrat(
