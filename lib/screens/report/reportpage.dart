@@ -54,7 +54,6 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(
                 width: 90,
               ),
-          
             ],
             leading: GestureDetector(
                 onTap: () => Navigator.pop(context),
@@ -91,80 +90,85 @@ class _ReportPageState extends State<ReportPage> {
 
                       return ListView.builder(
                           itemCount: _reportItems.length,
-                          itemBuilder: (context, index) => ListTile(
-                                trailing: GestureDetector(
-                                  onTap: () async {
-                                    await deleteMessage(
-                                        _reportItems[index]['key']);
-                                    Fluttertoast.showToast(
-                                        msg: "Report Deleted!!",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.BOTTOM,
-                                        timeInSecForIosWeb: 1,
-                                        backgroundColor: Colors.black45,
-                                        textColor: Colors.white,
-                                        fontSize: 15.0);
-                                  },
-                                  child: Icon(
-                                    FontAwesomeIcons.trashCan,
-                                    size: 18,
-                                    color: AppColors.btnBlue,
-                                    weight: 3,
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ViewReport(
-                                                discription: _reportItems[index]
-                                                    ['description'],
-                                                crimelocation:
-                                                    _reportItems[index]
-                                                        ['location'],
-                                                medicalassistance:
-                                                    _reportItems[index]
-                                                        ['medical'],
-                                                username: _reportItems[index]
-                                                    ['username'],
-                                              )));
-                                },
-                                leading: Material(
-                                  borderRadius: BorderRadius.circular(25),
-                                  elevation: 5,
-                                  child: Container(
-                                    height: 50,
-                                    width: 50,
+                          itemBuilder: (context, index) => Card(
+                                elevation: 3,
+                                color: Colors.white,
+                                child: ListTile(
+                                  trailing: GestureDetector(
+                                    onTap: () async {
+                                      await deleteMessage(
+                                          _reportItems[index]['key']);
+                                      Fluttertoast.showToast(
+                                          msg: "Report Deleted!!",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.black45,
+                                          textColor: Colors.white,
+                                          fontSize: 15.0);
+                                    },
                                     child: Icon(
-                                      FontAwesomeIcons.circleExclamation,
-                                      color: AppColors.cardRed,
-                                    ),
-                                    decoration: BoxDecoration(
-                                        color:
-                                            Color.fromARGB(255, 255, 255, 255),
-                                        borderRadius:
-                                            BorderRadius.circular(25)),
-                                  ),
-                                ),
-                                title: Text(
-                                  _reportItems[index]['username'],
-                                  style: GoogleFonts.poppins(
-                                      textStyle: headerboldblue2),
-                                ),
-                                subtitle: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.location_on,
-                                      size: 14,
+                                      FontAwesomeIcons.trashCan,
+                                      size: 18,
                                       color: AppColors.btnBlue,
+                                      weight: 3,
                                     ),
-                                    SizedBox(
-                                      width: 5,
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ViewReport(
+                                                  discription:
+                                                      _reportItems[index]
+                                                          ['description'],
+                                                  crimelocation:
+                                                      _reportItems[index]
+                                                          ['location'],
+                                                  medicalassistance:
+                                                      _reportItems[index]
+                                                          ['medical'],
+                                                  username: _reportItems[index]
+                                                      ['username'],
+                                                )));
+                                  },
+                                  leading: Material(
+                                    borderRadius: BorderRadius.circular(25),
+                                    elevation: 5,
+                                    child: Container(
+                                      height: 50,
+                                      width: 50,
+                                      child: Icon(
+                                        FontAwesomeIcons.circleExclamation,
+                                        color: AppColors.cardRed,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: Color.fromARGB(
+                                              255, 255, 255, 255),
+                                          borderRadius:
+                                              BorderRadius.circular(25)),
                                     ),
-                                    Text(
-                                      _reportItems[index]['location'],
-                                    )
-                                  ],
+                                  ),
+                                  title: Text(
+                                    _reportItems[index]['username'],
+                                    style: GoogleFonts.poppins(
+                                        textStyle: headerboldblue2),
+                                  ),
+                                  subtitle: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on,
+                                        size: 14,
+                                        color: AppColors.btnBlue,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        _reportItems[index]['location'],
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ));
                     }

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:crimeappbackend/module/newsmodules.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/colors.dart';
 import '../../core/text.dart';
@@ -223,6 +224,9 @@ class _ManageNewsState extends State<ManageNews> {
                               child: SingleChildScrollView(
                                 child: Column(
                                   children: [
+                                    isLoading
+                                        ? CircularProgressIndicator()
+                                        : Container(),
                                     SizedBox(
                                       height: 8,
                                     ),
@@ -269,14 +273,9 @@ class _ManageNewsState extends State<ManageNews> {
                                               ),
                                             ),
                                             SizedBox(height: 10),
-                                            // Add widgets for file upload here
-                                            // You can use a package like file_picker to handle file uploads
                                             SizedBox(height: 16),
                                             if (pickedFile != null)
-                                              Expanded(
-                                                  child:
-                                                      Text(pickedFile!.name)),
-
+                                              Text(pickedFile!.name),
                                             GestureDetector(
                                               onTap: _pickFile,
                                               child: Container(
@@ -323,6 +322,9 @@ class _ManageNewsState extends State<ManageNews> {
                                             buildProgress(),
                                             GestureDetector(
                                               onTap: () async {
+                                                setState(() {
+                                                  isLoading = true;
+                                                });
                                                 await uploadFile();
                                                 Map<String, String> news = {
                                                   'title':
@@ -332,20 +334,23 @@ class _ManageNewsState extends State<ManageNews> {
                                                           .text,
                                                   'imageurl': imgUrl
                                                 };
-                                       
 
                                                 dbRef
                                                     ?.push()
                                                     .set(news)
                                                     .then((_) {
-                                                
-
                                                   newsTitleController.text = "";
                                                   newsDescriptionController
                                                       .text = "";
-                                                }).catchError((_) {
-                                               
-                                                });
+                                                  setState(() {
+                                                    isLoading = false;
+                                                  });
+                                                  Get.showSnackbar(GetSnackBar(
+                                                    title: "News Posted",
+                                                    message:
+                                                        "News added suceesfully",
+                                                  ));
+                                                }).catchError((_) {});
                                               },
                                               child: Container(
                                                 padding:
