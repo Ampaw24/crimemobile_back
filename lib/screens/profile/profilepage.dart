@@ -77,7 +77,8 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           preferredSize: const Size.fromHeight(60)),
       body: SingleChildScrollView(
-        child: Stack(children: [
+        child: Stack(
+          children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

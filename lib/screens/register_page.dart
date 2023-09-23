@@ -10,7 +10,7 @@ import '../../../Specs/colors.dart';
 import '../../../Specs/password_field.dart';
 import '../../../Specs/text_field.dart';
 import '../config/firebase/firebaseAuth.dart';
-import 'package:flutter_flushbar/flutter_flushbar.dart';
+
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -129,7 +129,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     onTap: () async {
                       Map<String, String> admindetails = {
                         'name': _nameController.text,
-                        'mail':"${_studentIdController.text.trim()}@crsatu.com",
+                        'mail':
+                            "${_studentIdController.text.trim()}@crsatu.com",
                       };
 
                       if (!_formKey.currentState!.validate()) {
@@ -155,8 +156,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       ref
                           .push()
                           .set(admindetails)
-                          .then((_) => print('Admin Added')).catchError((e)=> print(e));
-                          
+                          .then((_) => print('Admin Added'))
+                          .catchError((e) => print(e));
+
                       setState(() {
                         _isLoading = false;
                       });
@@ -167,23 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             builder: (context) => LoginPage(),
                           ),
                         );
-                        Flushbar(
-                          title: "SignUp Success",
-                          message:
-                              "You are now an admin!! Enter Login Credentials to continue \n to dashboard",
-                          duration: Duration(seconds: 4),
-                          icon: Icon(Icons.done_outline_rounded,
-                              color: Colors.white),
-                          backgroundColor: Color.fromARGB(255, 52, 59, 61)
-                              .withOpacity(0.6),
-                          flushbarPosition: FlushbarPosition.TOP,
-                          animationDuration: Duration(milliseconds: 500),
-                          borderRadius: BorderRadius.circular(10),
-                          margin: EdgeInsets.all(8.0),
-                          onTap: (flushbar) {
-                            flushbar.dismiss();
-                          },
-                        ).show(context);
+
                       } else {
                         print("$result");
                       }
