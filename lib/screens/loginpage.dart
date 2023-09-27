@@ -50,7 +50,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final user = await _auth.signInWithEmailAndPassword(
           email: _staffIdController.text, password: _passwordController.text);
-      if (user == null || _staffIdController.text == " " || _passwordController.text == "") {
+      if (user == null ||
+          _staffIdController.text == " " ||
+          _passwordController.text == "") {
         setState(() {
           _isLoading = false;
         });
@@ -69,11 +71,11 @@ class _LoginPageState extends State<LoginPage> {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' ||
-          e.code == "account-exists-with-different-credential" || e.code == "The-password-is-invalid") {
+          e.code == "account-exists-with-different-credential" ||
+          e.code == "The-password-is-invalid") {
         setState(() {
           _isloading = false;
           _staffIdController.text = "";
-          
         });
       } else if (e.code == 'invalid-email') {
         setState(() {
@@ -155,9 +157,12 @@ class _LoginPageState extends State<LoginPage> {
                                       color: AppColors
                                           .btnBlue), // Change the color here
                                 ),
-                                hintText: "  Enter Admin Id",
+                                hintText:
+                                    " Enter Admin Id, e.g username@crsatu.com",
                                 hintStyle: GoogleFonts.roboto(
-                                    color: Colors.black12, fontSize: 14),
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.black12,
+                                    fontSize: 12),
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 15),
                                 border: OutlineInputBorder()),

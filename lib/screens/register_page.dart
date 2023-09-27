@@ -178,8 +178,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       );
                       ref.push().set(admindetails).then((_) {
                         Get.snackbar("Admin Added!",
-                            "Administrator details added Successfully",
-                            snackPosition: SnackPosition.TOP);
+                            "Administrator details added Successfully \n Your user mail is ${_studentIdController.text.trim().toLowerCase()}@crsatu.com}",
+                            snackPosition: SnackPosition.TOP,
+                             duration: Duration(seconds: 30)  
+                          );
                         setState(() {
                           _isLoading = false;
                         });
