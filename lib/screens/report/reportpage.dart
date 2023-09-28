@@ -127,7 +127,7 @@ class _ReportPageState extends State<ReportPage> {
                                                           ['location'],
                                                   medicalassistance:
                                                       _reportItems[index]
-                                                          ['medical'],
+                                                          ['medicalAssistance'],
                                                   username: _reportItems[index]
                                                       ['username'],
                                                 )));
@@ -150,7 +150,7 @@ class _ReportPageState extends State<ReportPage> {
                                     ),
                                   ),
                                   title: Text(
-                                    _reportItems[index]['username'],
+                                    "Crime Report",
                                     style: GoogleFonts.poppins(
                                         textStyle: headerboldblue2),
                                   ),
